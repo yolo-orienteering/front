@@ -14,12 +14,12 @@
             <template v-slot:subtitle>
               <div class="row items-center">
                 <div class="col-6">
-                  {{ getMoment(race.date!).locale('de-CH').format('dd, DD.MM yyyy') }}
+                  {{ formatDate(race.date!, 'dd, DD.MM yyyy') }}
                 </div>
                 <div v-if="race.deadline" class="col-6 text-right">
                   <q-chip color="accent" dense outline>
                     <span class="fal fa-bells q-mr-xs" />
-                    {{ getMoment(race.deadline!).locale('de-CH').format('dd, DD.MMM') }}
+                    {{ formatDate(race.deadline!, 'dd, DD.MMM') }}
                   </q-chip>
                 </div>
               </div>
@@ -69,14 +69,10 @@
 // import { useSyncCenter } from 'src/store/syncCenter'
 import { ref } from 'vue'
 import moment from 'moment'
-import type { Moment } from 'moment'
 import { Race } from 'src/types/DirectusTypes'
+import { formatDate } from 'src/utils/DateUtils'
 
 const showSearchBar = ref<boolean>(false)
-
-function getMoment(date: string): Moment {
-  return moment(date)
-}
 
 const props = withDefaults(defineProps<{
   races: Race[],

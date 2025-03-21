@@ -3,7 +3,7 @@
     <div id="teleport-to-menu" />
 
     <!-- back button -->
-    <div v-if="showBackButton" class="row justify-center bg-white">
+    <div v-if="showBackButton" class="row justify-center bg-white border-bottom-primary">
       <div class="col-auto q-py-sm">
         <q-btn size="md" outline rounded color="secondary" @click="$router.go(-1)">
           <span class="fal fa-chevron-left q-mr-xs" />
@@ -12,7 +12,7 @@
       </div>
     </div>
     <!-- menu entries -->
-    <div class="row q-mt-sm text-black">
+    <div class="row q-mt-sm text-primary">
       <div v-for="(menuEntry, menuEntryId) in menuEntries" :key="menuEntryId"
         @click="$router.push({ name: menuEntry.routeName })" class="col-4 text-center text-caption">
         <div>

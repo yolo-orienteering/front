@@ -1,0 +1,137 @@
+<template>
+  <div class="row items-center" v-if="race">
+    <!-- title and favorite -->
+    <div class="col-12 q-pt-md">
+      <div class="row justify-center items-center">
+        <div class="col-10 text-h5" style="line-height: 1.4em;">
+          {{ race.name }}
+        </div>
+        <q-space />
+        <div class="col-2 text-right">
+          <!-- <q-btn round color="primary" :outline="!syncCenter.myRaces.includes(race)" dense
+            @click="syncCenter.myRaces.addOrRemove(race)">
+            <span class="fal fa-star" />
+          </q-btn> -->
+
+          <!-- todo: add sync center ^-->
+          <q-btn round color="primary" outline dense>
+            <span class="fal fa-star" />
+          </q-btn>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- deadline -->
+    <div v-if="race.deadline" class="col-12 q-pt-md">
+      <q-banner dense rounded class="bg-accent text-white">
+        <span class="fal fa-bells" />
+        Anmeldung erforderlich bis am {{ formatDate(race.deadline, 'dd, DD.MMM YYYY') }}
+      </q-banner>
+    </div>
+
+    <!-- date, location, map name -->
+    <div class="col-12 q-pt-md q-pl-sm text-body1">
+      <div class="row">
+        <!-- date -->
+        <div class="col-12 q-pt-xs">
+          <q-icon name="event" class="q-mr-xs" />
+          {{ formatDate(race.date!, 'dd, DD.MMM YYYY') }}
+        </div>
+        <!-- location -->
+        <div class="col-12 q-pt-xs text-capitalize">
+          <q-icon name="location_on" class="q-mr-xs" />
+          {{ race.city || 'Ort noch unbekannt' }} {{ race.region ? `(${race.region}` : '' }}{{ race.country ? `,
+          ${race.country})` :
+            ')' }}
+        </div>
+        <!-- map name -->
+        <div class="col-12 q-pt-xs">
+          <q-icon name="map" class="q-mr-xs" />
+          {{ race.mapName }}
+        </div>
+      </div>
+    </div>
+
+    <!-- links -->
+    <div class="col-12">
+      <q-separator class="q-my-lg" />
+
+      <div class="text-h5">Links</div>
+
+      <div class="row q-col-gutter-sm q-pl-sm q-pt-md">
+        <!-- Ausschreibung -->
+        <div class="col-auto">
+          <q-btn v-if="race.publicationLink" outline @click="raceCompose.openLink({ race, linkType: 'publication' })">
+            <q-icon name="picture_as_pdf" class="q-mr-sm" />
+            Ausschreibung
+          </q-btn>
+        </div>
+
+        <!-- website -->
+        <div v-if="race.eventLink" class="col-auto">
+          <q-btn outline @click="raceCompose.openLink({ race, linkType: 'event' })">
+            <q-icon name="open_in_new" class="q-mr-sm" />
+            Webseite
+          </q-btn>
+        </div>
+
+        <!-- inscription link -->
+        <div v-if="race.inscriptionLink" class="col-auto">
+          <q-btn outline @click="raceCompose.openLink({ race, linkType: 'inscription' })">
+            <q-icon name="play_circle" class="q-mr-sm" />
+            Anmelden
+          </q-btn>
+        </div>
+
+        <!-- live results -->
+        <div v-if="race.liveResultLink" class="col-auto">
+          <q-btn outline @click="raceCompose.openLink({ race, linkType: 'liveResult' })">
+            <q-icon name="live_tv" class="q-mr-sm" />
+            Live-Resultate
+          </q-btn>
+        </div>
+
+        <!-- ranking -->
+        <div v-if="race.rankingLink" class="col-auto">
+          <q-btn outline @click="raceCompose.openLink({ race, linkType: 'ranking' })">
+            <q-icon name="list" class="q-mr-sm" />
+            Rangliste
+          </q-btn>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <q-separator class="q-my-lg" />
+
+  <!-- sbb -->
+  <div v-if="race" class="col-12 q-pb-sm">
+    <sbb-timetable :race="race" />
+  </div>
+</template>
+
+<script setup lang="ts">
+import { ref, onMounted } from 'vue'
+import { useRoute } from 'vue-router'
+// import { useSyncCenter } from 'src/store/syncCenter'
+import SbbTimetable from 'components/publicTransport/switzerland/SbbTimetable.vue'
+import { Race } from 'src/types/DirectusTypes'
+import { useApi } from 'src/stores/useApi'
+import { readItem } from '@directus/sdk'
+import { formatDate } from 'src/utils/DateUtils'
+import { useRace } from 'src/composables/useRace'
+
+// const syncCenter = useSyncCenter()
+const route = useRoute()
+const { directus } = useApi()
+const raceCompose = useRace()
+const race = ref<Race | null>(null)
+
+// load race
+onMounted(async () => {
+  const raceId: string = route.params.id as string
+
+  race.value = await directus.request<Race>(readItem('Race', raceId))
+})
+</script>

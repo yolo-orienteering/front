@@ -12,3 +12,8 @@
   animation: animate-up;
   animation-duration: 600ms;
 }
+
+
+.border-bottom-primary {
+  border-bottom: 1px solid $primary;
+}

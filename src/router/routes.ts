@@ -22,13 +22,13 @@ const routes: RouteRecordRaw[] = [
         path: 'races',
         component: () => import('pages/races/Races.vue'),
         props: true
-      },
+      }, */
       {
         name: 'race',
         path: 'race/:id',
         component: () => import('pages/races/Race.vue'),
         props: true
-      } */
+      }
     ]
   },
 
