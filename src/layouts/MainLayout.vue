@@ -17,4 +17,5 @@
 
 <script setup lang="ts">
 import MobileMenu from 'src/components/layout/MobileMenu.vue'
+import MyolHeader from 'src/components/layout/MyolHeader.vue'
 </script>

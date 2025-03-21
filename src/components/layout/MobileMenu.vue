@@ -1,5 +1,5 @@
 <template>
-  <q-footer elevated class="bg-primary">
+  <q-footer elevated class="bg-white">
     <div id="teleport-to-menu" />
 
     <!-- back button -->
@@ -12,11 +12,11 @@
       </div>
     </div>
     <!-- menu entries -->
-    <div class="row q-mt-sm">
+    <div class="row q-mt-sm text-black">
       <div v-for="(menuEntry, menuEntryId) in menuEntries" :key="menuEntryId"
         @click="$router.push({ name: menuEntry.routeName })" class="col-4 text-center text-caption">
         <div>
-          <q-icon :name="menuEntry.icon" :size="$route.name === menuEntry.routeName ? 'md' : 'sm'" />
+          <q-icon :name="menuEntry.icon" size="sm" />
         </div>
         {{ menuEntry.name }}
       </div>
