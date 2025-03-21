@@ -16,8 +16,17 @@ export const useRaces = defineStore('useRaces', () => {
     return {
       page: currentPage.value,
       limit: LIMIT,
-      sort: '-date'
-    }
+      sort: 'date',
+      filter: {
+        _and: [
+          {
+            date: {
+              _gte: new Date().toISOString()
+            }
+          }
+        ]
+      }
+    } as Query<CustomDirectusTypes, Race>
   })
 
   onMounted(async () => {
