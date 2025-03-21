@@ -16,8 +16,8 @@
         <div class="row q-col-gutter-sm">
           <!-- from -->
           <div class="col-6 q-pb-none">
-            <!-- <q-input v-model="user.ptStartingPoint" label="Von" outlined dense
-              :rules="[val => !!val || 'Wo soll\'s losgehen?']" /> -->
+            <q-input v-if="user" v-model="user.location" label="Von" outlined dense
+              :rules="[val => !!val || 'Wo soll\'s losgehen?']" />
           </div>
           <!-- to -->
           <div class="col-6 q-pb-none">
@@ -68,7 +68,7 @@
 import { onMounted, reactive } from 'vue'
 import type { Race } from '../../../types/DirectusTypes'
 import { formatDate } from 'src/utils/DateUtils'
-// import {useSyncCenter} from 'src/store/syncCenter'
+import { useSyncCenter } from 'src/stores/syncCenter'
 
 interface SbbSearchParams {
   to?: string
@@ -79,7 +79,7 @@ interface SbbSearchParams {
 
 const props = withDefaults(defineProps<{ race: Race | null }>(), { race: null })
 
-// const { user } = useSyncCenter()
+const { user } = useSyncCenter()
 const sbbSearchParams = reactive<SbbSearchParams>({
   arrival: true
 })
@@ -115,10 +115,9 @@ function composeSbbLink(): string {
   if (sbbSearchParams.time) {
     link += `&zeit=${sbbSearchParams.time}`
   }
-  // todo: include again
-  /* if (user.ptStartingPoint) {
-    link += `&von=${user.ptStartingPoint}`
-  } */
+  if (user?.location) {
+    link += `&von=${user.location}`
+  }
   if (sbbSearchParams.arrival) {
     link += `&an=${sbbSearchParams.arrival ? 'true' : 'false'}`
   }
