@@ -1,43 +1,38 @@
 <template>
-  <q-page class="row items-center justify-evenly">
-    <example-component
-      title="Example component"
-      active
-      :todos="todos"
-      :meta="meta"
-    ></example-component>
-  </q-page>
+  <div class="q-pt-md">
+    <!-- filter -->
+    <Teleport v-if="teleportToMenuEl" :to="teleportToMenuEl">
+      <!-- <races-filter v-show="races && races instanceof Races" @update-filter="updateFilter" :loading="loading" /> -->
+    </Teleport>
+
+    <race-timeline v-if="races" :races="races.races" @load-more="loadMore()" />
+  </div>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
-import type { Todo, Meta } from 'components/models';
-import ExampleComponent from 'components/ExampleComponent.vue';
+import { ref, onMounted, inject } from 'vue'
+import RaceTimeline from 'components/races/RaceTimeline.vue'
+import type { EventBus } from 'quasar'
+import { useRouter } from 'vue-router'
+import { useRaces } from 'src/stores/useRaces'
 
-const todos = ref<Todo[]>([
-  {
-    id: 1,
-    content: 'ct1'
-  },
-  {
-    id: 2,
-    content: 'ct2'
-  },
-  {
-    id: 3,
-    content: 'ct3'
-  },
-  {
-    id: 4,
-    content: 'ct4'
-  },
-  {
-    id: 5,
-    content: 'ct5'
-  }
-]);
+// defining races
+const loading = ref<boolean>(false)
+const teleportToMenuEl = ref<HTMLElement | null>(null)
+const router = useRouter()
 
-const meta = ref<Meta>({
-  totalCount: 1200
-});
+// initially loads races with onMounted hook within composable
+const races = useRaces()
+
+const eventBus = inject<EventBus>('eventBus')
+
+onMounted(() => {
+  teleportToMenuEl.value = document.getElementById('teleport-to-menu')
+})
+
+async function loadMore(): Promise<void> {
+  races.currentPage += 1
+  await races.loadRaces()
+}
+
 </script>
