@@ -10,9 +10,8 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, inject } from 'vue'
+import { ref, onMounted } from 'vue'
 import RaceTimeline from 'components/races/RaceTimeline.vue'
-import type { EventBus } from 'quasar'
 import { useRouter } from 'vue-router'
 import { useRaces } from 'src/stores/useRaces'
 
@@ -23,8 +22,6 @@ const router = useRouter()
 
 // initially loads races with onMounted hook within composable
 const races = useRaces()
-
-const eventBus = inject<EventBus>('eventBus')
 
 onMounted(() => {
   teleportToMenuEl.value = document.getElementById('teleport-to-menu')

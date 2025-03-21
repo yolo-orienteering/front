@@ -16,7 +16,7 @@
       <div v-for="(menuEntry, menuEntryId) in menuEntries" :key="menuEntryId"
         @click="$router.push({ name: menuEntry.routeName })" class="col-4 text-center text-caption">
         <div>
-          <span :class="[$route.name === menuEntry.routeName ? 'fas' : 'fal', menuEntry.icon]" class="text-h6" />
+          <q-icon :name="menuEntry.icon" :size="$route.name === menuEntry.routeName ? 'md' : 'sm'" />
         </div>
         {{ menuEntry.name }}
       </div>
@@ -37,17 +37,17 @@ interface IMenuEntry {
 const menuEntries = ref<IMenuEntry[]>([
   {
     name: 'Einstellungen',
-    icon: 'fa-cogs',
+    icon: 'settings',
     routeName: 'settings'
   },
   {
     name: 'Entdecken',
-    icon: 'fa-search',
+    icon: 'search',
     routeName: 'home'
   },
   {
     name: 'Meine Läufe',
-    icon: 'fa-running',
+    icon: 'directions_run',
     routeName: 'races'
   }
 ])
