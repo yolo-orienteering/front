@@ -6,8 +6,8 @@ export type RaceQuery = Query<CustomDirectusTypes, Race>
 export default class RaceFilter {
   public deadline: boolean
   public searchString: string | undefined
-  public geographicalScale: string | undefined | null
-  public regions: string[]
+  public geographicalScale: string | undefined
+  public regions?: string[]
   public limit: number
   public page: number
 
@@ -30,6 +30,7 @@ export default class RaceFilter {
       page = 1
     }
 
+    // base query
     const composedFilter: RaceQuery = {
       limit,
       page,
@@ -37,16 +38,41 @@ export default class RaceFilter {
       filter: {
         date: {
           _gte: new Date().toISOString()
-        },
-        deadline: {
-          _nnull: !!this.deadline
-        },
-        geographicalScale: {
-          _eq: this.geographicalScale || null
         }
       }
     } as RaceQuery
 
+    // add deadline filter
+    if (this.deadline !== undefined) {
+      composedFilter.filter = {
+        ...composedFilter.filter,
+        deadline: {
+          _nnull: !!this.deadline
+        }
+      }
+    }
+
+    // add geographical scale filter
+    if (this.geographicalScale) {
+      composedFilter.filter = {
+        ...composedFilter.filter,
+        geographicalScale: {
+          _eq: this.geographicalScale
+        }
+      }
+    }
+
+    // add region filter
+    if (this.regions?.length) {
+      const regionsOrFilter = this.regions.map(region => ({region: {_eq: region}}))
+
+      composedFilter.filter = {
+        ...composedFilter.filter,
+        _or: regionsOrFilter
+      }
+    }
+
+    // add search
     if (this.searchString) {
       composedFilter.search = this.searchString
     }

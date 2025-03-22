@@ -37,8 +37,9 @@
 
     <!-- region -->
     <div :class="[filter.regions ? 'col-7' : 'col-5']">
-      <q-select v-model="filter.regions" :options="regionsList" dense rounded multiple outlined clearable
-        color="secondary" label-color="secondary" label="Regionen" />
+      <q-select v-model="filter.regions" :options="regionStore.regions.map(region => region.region)"
+        @update:model-value="emits('update:filter')" @clear="emits('update:filter')" dense rounded multiple outlined
+        clearable color="secondary" label-color="secondary" label="Regionen" />
     </div>
   </div>
 </template>
@@ -46,8 +47,10 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue'
 import { useSyncCenter } from 'src/stores/syncCenter'
+import { useRegion } from 'src/stores/useRegion'
 
 const { filter } = useSyncCenter()
+const regionStore = useRegion()
 
 withDefaults(
   defineProps<{
@@ -64,24 +67,12 @@ const emits = defineEmits<{
 
 onMounted(() => {
   searchEngine()
-  // await loadRegionsList()
 })
 
 
 // text search helpers
 const lastSearchString = ref<string | undefined>(undefined)
 const regionsList = ref<string[]>([])
-
-/**
- * FUNCTIONS
- */
-// async function loadRegionsList() {
-//   const response = await RaceService.getRegions()
-//   if (response) {
-//     regionsList.value = response
-//   }
-// }
-
 
 /**
  * handles user search input
@@ -101,7 +92,7 @@ function updateFilter({ deadline, geographicalScale }: { deadline?: boolean, geo
   }
 
   if (geographicalScale !== undefined) {
-    filter.geographicalScale = geographicalScale
+    filter.geographicalScale = geographicalScale || undefined
   }
 
   emits('update:filter')
