@@ -71,8 +71,7 @@ onMounted(() => {
 
 
 // text search helpers
-const lastSearchString = ref<string | undefined>(undefined)
-const regionsList = ref<string[]>([])
+const lastSearchString = ref<string | undefined>(filter.searchString)
 
 /**
  * handles user search input
