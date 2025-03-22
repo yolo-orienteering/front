@@ -1,33 +1,35 @@
 <template>
-  <div v-if="filter" class="row bg-white items-center races-filter-container q-py-sm no-wrap q-px-sm">
+  <div v-if="filter"
+    class="row bg-white items-center races-filter-container q-py-sm no-wrap q-px-sm border-bottom-primary">
     <!-- filter icon -->
     <div class="col-auto text-secondary">
-      <span class="fal fa-sliders-h fa-2x q-mx-sm" />
+      <q-icon name="tune" size="sm" class="q-mx-sm" />
     </div>
 
     <!-- search -->
     <div class="q-mr-xs" :class="[!!filter?.searchString ? 'col-6' : 'col-4']">
       <q-input v-model="filter.searchString" :loading="loading" outlined label="Lauf suchen" color="secondary" dense
-        rounded label-color="secondary" clearable clear-icon="fal fa-times" />
+        rounded label-color="secondary" clearable clear-icon="close" />
     </div>
 
     <!-- deadline -->
     <div class="col-auto">
-      <q-chip @click="updateFilter('deadline')" :selected="filter.deadline" outline class="q-ml-none" color="secondary"
-        dense size="xl" :class="filter.deadline ? 'bg-secondary text-white' : 'bg-white'">
+      <q-chip @click="updateFilter({ deadline: !filter.deadline })" :selected="filter.deadline" outline
+        class="q-ml-none" color="secondary" dense size="xl"
+        :class="filter.deadline ? 'bg-secondary text-white' : 'bg-white'">
         <span class="text-body2">
-          <span v-if="!filter.deadline" class="fal fa-bells" />
+          <q-icon v-if="!filter.deadline" name="notifications" size="sm" />
           Anmeldeschluss
         </span>
       </q-chip>
     </div>
     <!-- relevance -->
     <div class="col-auto">
-      <q-chip @click="filter.geographicalScale = !filter.geographicalScale ? 'national' : undefined"
+      <q-chip @click="updateFilter({ geographicalScale: filter.geographicalScale ? null : 'national' })"
         :selected="!!filter.geographicalScale" outline icon-selected="" class="q-ml-none" color="secondary" dense
         size="xl" :class="filter.geographicalScale ? 'bg-secondary text-white' : 'bg-white'">
         <span class="text-body2">
-          <span v-if="!filter.geographicalScale" class="fal fa-map-marked" />
+          <q-icon v-if="!filter.geographicalScale" name="location_on" size="sm" />
           Nat. Meisterschaft
         </span>
       </q-chip>
@@ -42,9 +44,8 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref, watch } from 'vue'
+import { onMounted, ref } from 'vue'
 import { useSyncCenter } from 'src/stores/syncCenter'
-import { RaceQuery } from 'src/classes/RaceFilter'
 
 const { filter } = useSyncCenter()
 
@@ -94,9 +95,13 @@ function searchEngine() {
   }, 1000)
 }
 
-function updateFilter(filterType: 'deadline') {
-  if (filterType === 'deadline') {
-    filter.deadline = !filter.deadline
+function updateFilter({ deadline, geographicalScale }: { deadline?: boolean, geographicalScale?: string | null }) {
+  if (deadline !== undefined) {
+    filter.deadline = deadline
+  }
+
+  if (geographicalScale !== undefined) {
+    filter.geographicalScale = geographicalScale
   }
 
   emits('update:filter')

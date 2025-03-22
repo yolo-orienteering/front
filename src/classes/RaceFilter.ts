@@ -6,7 +6,7 @@ export type RaceQuery = Query<CustomDirectusTypes, Race>
 export default class RaceFilter {
   public deadline: boolean
   public searchString: string | undefined
-  public geographicalScale: string | undefined
+  public geographicalScale: string | undefined | null
   public regions: string[]
   public limit: number
   public page: number
@@ -41,11 +41,14 @@ export default class RaceFilter {
       }
     } as RaceQuery
   
-    // deadline
     composedFilter.filter = {
       ...composedFilter.filter,
+      // deadline
       deadline: {
         _nnull: !!this.deadline
+      },
+      geographicalScale: {
+        _eq: this.geographicalScale || null
       }
     }
   

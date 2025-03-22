@@ -17,7 +17,7 @@ import { useSyncCenter } from 'src/stores/syncCenter'
 import { Race } from 'src/types/DirectusTypes'
 import { useApi } from 'src/stores/useApi'
 import { readItems } from '@directus/sdk'
-import { Notify, scroll } from 'quasar'
+import { Notify } from 'quasar'
 import { useEventBus } from 'src/stores/useEventBus'
 
 // defining races
