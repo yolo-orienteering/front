@@ -1,11 +1,12 @@
-import { defineRouter } from '#q-app/wrappers';
+import { defineRouter } from '#q-app/wrappers'
 import {
   createMemoryHistory,
   createRouter,
   createWebHashHistory,
   createWebHistory,
-} from 'vue-router';
-import routes from './routes';
+} from 'vue-router'
+import routes from './routes'
+import { useEventBus } from 'src/stores/useEventBus'
 
 /*
  * If not building with SSR mode, you can
@@ -17,19 +18,34 @@ import routes from './routes';
  */
 
 export default defineRouter(function (/* { store, ssrContext } */) {
+  const eventBus = useEventBus().eventBus
+
   const createHistory = process.env.SERVER
     ? createMemoryHistory
     : (process.env.VUE_ROUTER_MODE === 'history' ? createWebHistory : createWebHashHistory);
 
   const Router = createRouter({
-    scrollBehavior: () => ({ left: 0, top: 0 }),
+    scrollBehavior: (to, from, savedPosition) => {
+      if (savedPosition) {
+        // only scroll to saved position if event is emitted from component
+        // example in Index.vue: EventBus.$emit('scrollToSavedPosition')
+        return new Promise((resolve) => {
+          eventBus.on('scrollToSavedPosition', () => {
+            // kill event listener
+            eventBus.off('scrollToSavedPosition')
+            resolve(savedPosition)
+          })
+        })
+      }
+      return ({ left: 0, top: 0 })
+    },
     routes,
 
     // Leave this as is and make changes in quasar.conf.js instead!
     // quasar.conf.js -> build -> vueRouterMode
     // quasar.conf.js -> build -> publicPath
     history: createHistory(process.env.VUE_ROUTER_BASE),
-  });
+  })
 
-  return Router;
-});
+  return Router
+})

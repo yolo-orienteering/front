@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia'
 import {useQuasar} from 'quasar'
+import RaceFilter from 'src/classes/RaceFilter'
 import { DirectusUsers } from 'src/types/DirectusTypes'
 import { ref, watch } from 'vue'
 
@@ -8,8 +9,9 @@ export const useSyncCenter = defineStore('syncCenter', () => {
    * DEFINE DATA YOU WANT SYNC
    */
   // const myRaces = ref<Races>(new Races())
-  // let filters = reactive<RaceFilter>(new RaceFilter())
   const user = ref<Partial<DirectusUsers> | null>(null)
+  const filter = ref<RaceFilter>(new RaceFilter())
+  
 
   /**
    * DEFINE STORE KEY NAMES
@@ -25,7 +27,7 @@ export const useSyncCenter = defineStore('syncCenter', () => {
    */
   // load data from local store
   // readMyRaces()
-  // readFilters()
+  readFilters()
   readUser()
   // function readMyRaces (): void {
   //   const racesFromStore = localStorage.getItem<Races>(MY_RACES_STORAGE_KEY)
@@ -33,12 +35,14 @@ export const useSyncCenter = defineStore('syncCenter', () => {
   //     myRaces.value = new Races().parseJson(racesFromStore)
   //   }
   // }
-  // function readFilters (): void {
-  //   const filtersFromStore: RaceFilter | null = localStorage.getItem<RaceFilter>(FILTERS_STORAGE_KEY)
-  //   if (filtersFromStore) {
-  //     Object.assign(filters, filtersFromStore)
-  //   }
-  // }
+  function readFilters (): void {
+    const filtersFromStore: RaceFilter | null = localStorage.getItem<RaceFilter>(FILTERS_STORAGE_KEY)
+    if (filtersFromStore) {
+      filter.value = new RaceFilter(filtersFromStore)
+    } else {
+      filter.value = new RaceFilter()
+    }
+  }
   function readUser (): void {
     const userFromStore: Partial<DirectusUsers> | null = localStorage.getItem<Partial<DirectusUsers>>(USER_STORAGE_KEY)
     if (userFromStore) {
@@ -57,16 +61,17 @@ export const useSyncCenter = defineStore('syncCenter', () => {
   //   myRaces.value.sortByDate()
   //   localStorage.set(MY_RACES_STORAGE_KEY, myRaces.value)
   // }, {deep: true})
-  // // filters
-  // watch(filters, () => {
-  //   localStorage.set(FILTERS_STORAGE_KEY, filters)
-  // }, {deep: true})
+  // filters
+  watch(filter, () => {
+    localStorage.set(FILTERS_STORAGE_KEY, filter.value)
+  }, {deep: true})
   // user
   watch(user, () => {
     localStorage.set(USER_STORAGE_KEY, user.value)
   }, {deep: true})
 
   return {
-    user
+    user,
+    filter
   }
 })

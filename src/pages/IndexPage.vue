@@ -2,34 +2,68 @@
   <div class="q-pt-md">
     <!-- filter -->
     <Teleport v-if="teleportToMenuEl" :to="teleportToMenuEl">
-      <!-- <races-filter v-show="races && races instanceof Races" @update-filter="updateFilter" :loading="loading" /> -->
+      <races-filter v-show="races" :loading="loading" @update:filter="updateFilter()" />
     </Teleport>
 
-    <race-timeline v-if="races" :races="races.races" @load-more="loadMore()" />
+    <race-timeline v-if="races" :races="races" @load-more="loadMore()" />
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import RaceTimeline from 'components/races/RaceTimeline.vue'
-import { useRouter } from 'vue-router'
-import { useRaces } from 'src/stores/useRaces'
+import RacesFilter from 'components/races/RacesFilter.vue'
+import { useSyncCenter } from 'src/stores/syncCenter'
+import { Race } from 'src/types/DirectusTypes'
+import { useApi } from 'src/stores/useApi'
+import { readItems } from '@directus/sdk'
+import { Notify, scroll } from 'quasar'
+import { useEventBus } from 'src/stores/useEventBus'
 
 // defining races
 const loading = ref<boolean>(false)
 const teleportToMenuEl = ref<HTMLElement | null>(null)
-const router = useRouter()
 
 // initially loads races with onMounted hook within composable
-const races = useRaces()
+const syncCenter = useSyncCenter()
+const { directus } = useApi()
+const races = ref<Race[]>([])
+const eventBus = useEventBus().eventBus
 
-onMounted(() => {
+onMounted(async () => {
   teleportToMenuEl.value = document.getElementById('teleport-to-menu')
+  await initialLoad()
 })
 
-async function loadMore(): Promise<void> {
-  races.currentPage += 1
-  await races.loadRaces()
+async function initialLoad(): Promise<void> {
+  const query = syncCenter.filter.composeRaceQuery({ initialLoad: true })
+  races.value = await directus.request<Race[]>(readItems('Race', query))
+  eventBus.emit('scrollToSavedPosition')
 }
 
+async function updateFilter(): Promise<void> {
+  window.scrollTo({
+    top: 0,
+    behavior: 'smooth'
+  })
+  syncCenter.filter.page = 1
+  const query = syncCenter.filter.composeRaceQuery({})
+  races.value = await directus.request<Race[]>(readItems('Race', query))
+}
+
+async function loadMore(): Promise<void> {
+  syncCenter.filter.page += 1
+  const query = syncCenter.filter.composeRaceQuery({})
+  const newRaces = await directus.request<Race[]>(readItems('Race', query))
+
+  // no new races
+  if (!newRaces.length) {
+    syncCenter.filter.page -= 1
+    Notify.create({
+      message: 'Keine weiteren Läufe verfügbar'
+    })
+    return
+  }
+  races.value = [...races.value, ...newRaces]
+}
 </script>
