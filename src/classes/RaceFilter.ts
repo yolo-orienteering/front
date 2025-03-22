@@ -37,19 +37,18 @@ export default class RaceFilter {
       filter: {
         date: {
           _gte: new Date().toISOString()
+        },
+        deadline: {
+          _nnull: !!this.deadline
+        },
+        geographicalScale: {
+          _eq: this.geographicalScale || null
         }
       }
     } as RaceQuery
-  
-    composedFilter.filter = {
-      ...composedFilter.filter,
-      // deadline
-      deadline: {
-        _nnull: !!this.deadline
-      },
-      geographicalScale: {
-        _eq: this.geographicalScale || null
-      }
+
+    if (this.searchString) {
+      composedFilter.search = this.searchString
     }
   
     return composedFilter

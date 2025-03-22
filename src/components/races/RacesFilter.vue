@@ -90,7 +90,7 @@ function searchEngine() {
   setInterval(() => {
     if (filter && filter?.searchString !== lastSearchString.value) {
       lastSearchString.value = filter.searchString
-      // emits('updateFilter', composeFilter())
+      emits('update:filter')
     }
   }, 1000)
 }
