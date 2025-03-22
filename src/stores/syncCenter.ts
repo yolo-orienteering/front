@@ -1,14 +1,14 @@
 import { defineStore } from 'pinia'
 import {useQuasar} from 'quasar'
 import RaceFilter from 'src/classes/RaceFilter'
-import { DirectusUsers } from 'src/types/DirectusTypes'
+import { DirectusUsers, Race } from 'src/types/DirectusTypes'
 import { ref, watch } from 'vue'
 
 export const useSyncCenter = defineStore('syncCenter', () => {
   /**
    * DEFINE DATA YOU WANT SYNC
    */
-  // const myRaces = ref<Races>(new Races())
+  const myRaces = ref<Race[]>([])
   const user = ref<Partial<DirectusUsers> | null>(null)
   const filter = ref<RaceFilter>(new RaceFilter())
   
@@ -26,15 +26,12 @@ export const useSyncCenter = defineStore('syncCenter', () => {
    * INITIAL DATA READING FROM STORE
    */
   // load data from local store
-  // readMyRaces()
+  readMyRaces()
   readFilters()
   readUser()
-  // function readMyRaces (): void {
-  //   const racesFromStore = localStorage.getItem<Races>(MY_RACES_STORAGE_KEY)
-  //   if (racesFromStore) {
-  //     myRaces.value = new Races().parseJson(racesFromStore)
-  //   }
-  // }
+  function readMyRaces (): void {
+    myRaces.value = localStorage.getItem<Race[]>(MY_RACES_STORAGE_KEY) || []
+  }
   function readFilters (): void {
     const filtersFromStore: RaceFilter | null = localStorage.getItem<RaceFilter>(FILTERS_STORAGE_KEY)
     if (filtersFromStore) {
@@ -56,11 +53,10 @@ export const useSyncCenter = defineStore('syncCenter', () => {
    * WATCH CHANGES ON THE DATA AND SAVE THEM
    */
   // races
-  // watch(myRaces, () => {
-  //   // sort by date
-  //   myRaces.value.sortByDate()
-  //   localStorage.set(MY_RACES_STORAGE_KEY, myRaces.value)
-  // }, {deep: true})
+  watch(myRaces, () => {
+    // sort by date
+    localStorage.set(MY_RACES_STORAGE_KEY, myRaces.value)
+  }, {deep: true})
   // filters
   watch(filter, () => {
     localStorage.set(FILTERS_STORAGE_KEY, filter.value)
@@ -71,6 +67,7 @@ export const useSyncCenter = defineStore('syncCenter', () => {
   }, {deep: true})
 
   return {
+    myRaces,
     user,
     filter
   }

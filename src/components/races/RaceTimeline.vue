@@ -31,14 +31,9 @@
                   {{ race.name }}
                 </div>
                 <div class="col-2 text-right">
-                  <!-- <q-btn round color="primary" :outline="!syncCenter.myRaces.includes(race)" dense
-                    @click.stop="syncCenter.myRaces.addOrRemove(race)">
-                    <span class="fal fa-star" />
-                  </q-btn> -->
-
-                  <!-- todo: add sync center -->
-                  <q-btn round color="primary" outline dense>
-                    <span class="fal fa-star" />
+                  <q-btn round color="primary" :outline="!syncCenter.myRaces.find(myRace => myRace.id === race.id)"
+                    dense @click.stop="raceCompose.addOrRemoveRace(race)">
+                    <q-icon name="star" />
                   </q-btn>
                 </div>
               </div>
@@ -66,13 +61,14 @@
 </template>
 
 <script setup lang="ts">
-// import { useSyncCenter } from 'src/store/syncCenter'
-import { ref } from 'vue'
 import moment from 'moment'
 import { Race } from 'src/types/DirectusTypes'
 import { formatDate } from 'src/utils/DateUtils'
+import { useSyncCenter } from 'src/stores/syncCenter'
+import { useRace } from 'src/composables/useRace'
 
-const showSearchBar = ref<boolean>(false)
+const syncCenter = useSyncCenter()
+const raceCompose = useRace()
 
 const props = withDefaults(defineProps<{
   races: Race[],
@@ -82,7 +78,6 @@ const props = withDefaults(defineProps<{
   showLoadMore: true
 })
 
-// const syncCenter = useSyncCenter()
 const emit = defineEmits<{ (e: 'loadMore'): void }>()
 
 function loadMore() {

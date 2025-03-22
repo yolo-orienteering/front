@@ -8,13 +8,8 @@
         </div>
         <q-space />
         <div class="col-2 text-right">
-          <!-- <q-btn round color="primary" :outline="!syncCenter.myRaces.includes(race)" dense
-            @click="syncCenter.myRaces.addOrRemove(race)">
-            <span class="fal fa-star" />
-          </q-btn> -->
-
-          <!-- todo: add sync center ^-->
-          <q-btn round color="primary" outline dense>
+          <q-btn round color="primary" :outline="!syncCenter.myRaces.includes(race)" dense
+            @click="raceCompose.addOrRemoveRace(race)">
             <span class="fal fa-star" />
           </q-btn>
         </div>
@@ -114,18 +109,19 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
-// import { useSyncCenter } from 'src/store/syncCenter'
 import SbbTimetable from 'components/publicTransport/switzerland/SbbTimetable.vue'
 import { Race } from 'src/types/DirectusTypes'
 import { useApi } from 'src/stores/useApi'
 import { readItem } from '@directus/sdk'
 import { formatDate } from 'src/utils/DateUtils'
 import { useRace } from 'src/composables/useRace'
+import { useSyncCenter } from 'src/stores/syncCenter'
 
-// const syncCenter = useSyncCenter()
 const route = useRoute()
 const { directus } = useApi()
 const raceCompose = useRace()
+const syncCenter = useSyncCenter()
+
 const race = ref<Race | null>(null)
 
 // load race

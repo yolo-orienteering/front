@@ -17,12 +17,12 @@ const routes: RouteRecordRaw[] = [
         component: () => import('pages/Settings.vue'),
         props: true
       },
-      /* {
+      {
         name: 'races',
         path: 'races',
         component: () => import('pages/races/Races.vue'),
         props: true
-      }, */
+      },
       {
         name: 'race',
         path: 'race/:id',
