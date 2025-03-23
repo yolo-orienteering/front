@@ -8,9 +8,9 @@
         </div>
         <q-space />
         <div class="col-2 text-right">
-          <q-btn round color="primary" :outline="!syncCenter.myRaces.includes(race)" dense
+          <q-btn round color="primary" :outline="!syncCenter.myRaces.find(myRace => myRace.id === race?.id)" dense
             @click="raceCompose.addOrRemoveRace(race)">
-            <span class="fal fa-star" />
+            <q-icon name="star_outline" />
           </q-btn>
         </div>
       </div>

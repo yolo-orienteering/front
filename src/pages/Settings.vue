@@ -2,7 +2,7 @@
   <div class="q-pt-md">
     <div class="row justify-between items-center">
       <div class="text-h5">
-        Benachrichtigungen
+        Benachrichtigungen (Funktion in Entwicklung)
       </div>
     </div>
 
@@ -16,25 +16,6 @@
           { label: 'Nur meine Läufe', value: 'only-mine' },
           { label: 'Keine', value: 'none' }
         ]" class="q-mt-sm" />
-      </div>
-    </div>
-
-    <div class="row justify-between items-center q-mt-lg">
-      <div class="text-h5">
-        App weiterentwickeln
-      </div>
-
-      <div class="col-12 text-subtitle1">
-        Finanzieren
-      </div>
-      <q-linear-progress size="40px" :value="89" color="primary">
-        <div class="absolute-full flex flex-center">
-          <q-badge color="white" text-color="primary" label="6'000 / 8'000 chf" />
-        </div>
-      </q-linear-progress>
-
-      <div class="col-12 text-subtitle1 q-mt-md">
-        Entscheiden
       </div>
     </div>
 

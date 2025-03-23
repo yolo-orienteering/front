@@ -33,7 +33,7 @@
                 <div class="col-2 text-right">
                   <q-btn round color="primary" :outline="!syncCenter.myRaces.find(myRace => myRace.id === race.id)"
                     dense @click.stop="raceCompose.addOrRemoveRace(race)">
-                    <q-icon name="star" />
+                    <q-icon name="star_outline" />
                   </q-btn>
                 </div>
               </div>

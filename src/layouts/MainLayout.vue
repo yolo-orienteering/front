@@ -1,7 +1,7 @@
 <template>
   <q-layout view="lHh Lpr lFf" class="background">
     <!-- header -->
-    <myol-header />
+    <myol-header @click="router.push('/')" />
 
     <!-- content -->
     <q-page-container>
@@ -18,4 +18,8 @@
 <script setup lang="ts">
 import MobileMenu from 'src/components/layout/MobileMenu.vue'
 import MyolHeader from 'src/components/layout/MyolHeader.vue'
+import { useRouter } from 'vue-router'
+
+const router = useRouter()
+
 </script>
