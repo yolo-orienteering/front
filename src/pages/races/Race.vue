@@ -34,7 +34,7 @@
           {{ formatDate(race.date!, 'dd, DD.MMM YYYY') }}
         </div>
         <!-- location -->
-        <div class="col-12 q-pt-xs text-capitalize">
+        <div class="col-12 q-pt-xs">
           <q-icon name="location_on" class="q-mr-xs" />
           {{ race.city || 'Ort noch unbekannt' }} {{ race.region ? `(${race.region}` : '' }}{{ race.country ? `,
           ${race.country})` :

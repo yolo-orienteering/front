@@ -43,11 +43,11 @@ export default class RaceFilter {
     } as RaceQuery
 
     // add deadline filter
-    if (this.deadline !== undefined) {
+    if (this.deadline) {
       composedFilter.filter = {
         ...composedFilter.filter,
         deadline: {
-          _nnull: !!this.deadline
+          _nnull: true
         }
       }
     }
