@@ -18,9 +18,9 @@ const routes: RouteRecordRaw[] = [
         props: true
       },
       {
-        name: 'races',
-        path: 'races',
-        component: () => import('pages/races/Races.vue'),
+        name: 'my-races',
+        path: 'my/races',
+        component: () => import('pages/races/MyRaces.vue'),
         props: true
       },
       {

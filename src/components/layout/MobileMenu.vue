@@ -48,7 +48,7 @@ const menuEntries = ref<IMenuEntry[]>([
   {
     name: 'Meine Läufe',
     icon: 'directions_run',
-    routeName: 'races'
+    routeName: 'my-races'
   }
 ])
 const showBackButton = ref<boolean>(false)

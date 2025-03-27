@@ -2,7 +2,7 @@ import { defineStore } from 'pinia'
 import {useQuasar} from 'quasar'
 import RaceFilter from 'src/classes/RaceFilter'
 import { DirectusUsers, Race } from 'src/types/DirectusTypes'
-import { ref, watch } from 'vue'
+import { computed, ref, watch } from 'vue'
 
 export const useSyncCenter = defineStore('syncCenter', () => {
   /**
@@ -11,6 +11,17 @@ export const useSyncCenter = defineStore('syncCenter', () => {
   const myRaces = ref<Race[]>([])
   const user = ref<Partial<DirectusUsers> | null>(null)
   const filter = ref<RaceFilter>(new RaceFilter())
+
+  const myRacesSorted = computed<Race[]>(() => {
+    return myRaces.value.sort((a, b) => {
+      const aDate = a.date
+      const bDate = b.date
+      if (!aDate || !bDate) {
+        return 0
+      }
+      return new Date(aDate).getTime() - new Date(bDate).getTime()
+    })
+  })
   
 
   /**
@@ -68,6 +79,7 @@ export const useSyncCenter = defineStore('syncCenter', () => {
 
   return {
     myRaces,
+    myRacesSorted,
     user,
     filter
   }
