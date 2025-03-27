@@ -36,9 +36,10 @@
         <!-- location -->
         <div class="col-12 q-pt-xs">
           <q-icon name="location_on" class="q-mr-xs" />
-          {{ race.city || 'Ort noch unbekannt' }} {{ race.region ? `(${race.region}` : '' }}{{ race.country ? `,
-          ${race.country})` :
-            ')' }}
+          {{ race.city || race.mapName || 'vakant' }} {{ race.region ? `(${race.region}` : '' }}<span
+            class="text-capitalize">{{ race.country ? `,
+            ${race.country})` :
+              ')' }}</span>
         </div>
         <!-- map name -->
         <div class="col-12 q-pt-xs">

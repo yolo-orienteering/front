@@ -5,7 +5,7 @@
         <template v-for="race in races" :key="race.id">
           <!-- monthly delimiter -->
           <q-timeline-entry v-if="monthChangeInArray(race.id)" heading>
-            {{ getMonthlyDelimiter(race.date!) }}
+            {{ getMonthlyDelimiter(syncCenter.filter.deadline ? race.deadline! : race.date!) }}
           </q-timeline-entry>
 
           <!-- races -->
@@ -17,8 +17,7 @@
                   {{ formatDate(race.date!, 'dd, DD.MM yyyy') }}
                 </div>
                 <div v-if="race.deadline" class="col-6 text-right">
-                  <q-chip color="accent" dense outline>
-                    <span class="fal fa-bells q-mr-xs" />
+                  <q-chip color="accent" dense :outline="!syncCenter.filter.deadline">
                     {{ formatDate(race.deadline!, 'dd, DD.MMM') }}
                   </q-chip>
                 </div>
@@ -41,9 +40,10 @@
             <!-- text body -->
             <div class="row">
               <div class="col-auto">
-                <span class="fal fa-map-pin q-mr-xs" /> {{ race.city || 'vakant' }} {{ race.region ? `(${race.region})`
+                <span class="fal fa-map-pin q-mr-xs" /> {{ race.city || race.mapName || 'vakant' }} {{ race.region ?
+                  `(${race.region})`
                   :
-                  '' }}
+                '' }}
               </div>
             </div>
           </q-timeline-entry>
@@ -66,6 +66,7 @@ import { Race } from 'src/types/DirectusTypes'
 import { formatDate } from 'src/utils/DateUtils'
 import { useSyncCenter } from 'src/stores/syncCenter'
 import { useRace } from 'src/composables/useRace'
+import { computed } from 'vue'
 
 const syncCenter = useSyncCenter()
 const raceCompose = useRace()
@@ -100,8 +101,13 @@ function monthChangeInArray(raceId: string, firstMonth: boolean = true): boolean
     return firstMonth
   }
 
-  const previousRaceDate = props.races[foundIndex - 1]?.date
-  const currentRaceDate = props.races[foundIndex]?.date
+  const sortByDeadline = syncCenter.filter.deadline
+
+  const previousRace = props.races[foundIndex - 1]
+  const currentRace = props.races[foundIndex]
+
+  const previousRaceDate = sortByDeadline ? previousRace?.deadline : previousRace?.date
+  const currentRaceDate = sortByDeadline ? currentRace?.deadline : currentRace?.date
 
   const monthOfPreviousRace = previousRaceDate ? new Date(previousRaceDate).getMonth() : undefined
   const currentMonth = currentRaceDate ? new Date(currentRaceDate).getMonth() : undefined

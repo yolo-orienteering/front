@@ -1,4 +1,4 @@
-import { Query } from '@directus/sdk'
+import { Query, QueryFilter } from '@directus/sdk'
 import { CustomDirectusTypes, Race } from 'src/types/DirectusTypes'
 
 export type RaceQuery = Query<CustomDirectusTypes, Race>
@@ -46,10 +46,22 @@ export default class RaceFilter {
     if (this.deadline) {
       composedFilter.filter = {
         ...composedFilter.filter,
-        deadline: {
-          _nnull: true
-        }
-      }
+        _and: [
+          {
+            deadline: {
+              _nnull: true,
+            }
+          },
+          {
+            deadline: {
+              _gte: new Date().toISOString()
+            },
+          }
+        ],
+        date: {}
+      } as QueryFilter<CustomDirectusTypes, Race>
+
+      composedFilter.sort = 'deadline'
     }
 
     // add geographical scale filter
