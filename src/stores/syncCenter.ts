@@ -13,14 +13,22 @@ export const useSyncCenter = defineStore('syncCenter', () => {
   const filter = ref<RaceFilter>(new RaceFilter())
 
   const myRacesSorted = computed<Race[]>(() => {
-    return myRaces.value.sort((a, b) => {
-      const aDate = a.date
-      const bDate = b.date
-      if (!aDate || !bDate) {
-        return 0
-      }
-      return new Date(aDate).getTime() - new Date(bDate).getTime()
-    })
+    const todayMs = new Date().setHours(0, 0, 0, 0)
+    return myRaces.value
+      .sort((a, b) => {
+        const aDate = a.date
+        const bDate = b.date
+        if (!aDate || !bDate) {
+          return 0
+        }
+        return new Date(aDate).getTime() - new Date(bDate).getTime()
+      })
+      .filter(race => { // only return races in future.
+        if (!race.date) {
+          return false
+        }
+        return new Date(race.date).setHours(0, 0, 0, 0) >= todayMs
+      })
   })
   
 
