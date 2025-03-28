@@ -17,7 +17,7 @@
                   {{ formatDate(race.date!, 'dd, DD.MM yyyy') }}
                 </div>
                 <div v-if="race.deadline" class="col-6 text-right">
-                  <q-chip color="accent" dense :outline="!syncCenter.filter.deadline">
+                  <q-chip color="secondary" dense :outline="!syncCenter.filter.deadline">
                     {{ formatDate(race.deadline!, 'dd, DD.MMM') }}
                   </q-chip>
                 </div>
@@ -43,7 +43,7 @@
                 <span class="fal fa-map-pin q-mr-xs" /> {{ race.city || race.mapName || 'vakant' }} {{ race.region ?
                   `(${race.region})`
                   :
-                '' }}
+                  '' }}
               </div>
             </div>
           </q-timeline-entry>

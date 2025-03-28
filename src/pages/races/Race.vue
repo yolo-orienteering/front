@@ -19,7 +19,7 @@
 
     <!-- deadline -->
     <div v-if="race.deadline" class="col-12 q-pt-md">
-      <q-banner dense rounded class="bg-accent text-white">
+      <q-banner dense rounded class="bg-secondary text-white">
         <span class="fal fa-bells" />
         Anmeldung erforderlich bis am {{ formatDate(race.deadline, 'dd, DD.MMM YYYY') }}
       </q-banner>
