@@ -61,6 +61,9 @@ const milestones: { text: string, done: boolean }[] = [
     text: 'Zeige deine Startzeit automatisch an, wenn Du an einem Lauf angemeldet bist.',
     done: false
   }, {
+    text: 'Übersetze die App in andere Sprachen, insbesondere Englisch',
+    done: false
+  }, {
     text: 'Synchronisiere deine vorgemerkten Läufe automatisch mit deinem Kalender.',
     done: false
   }, {
