@@ -1,8 +1,8 @@
 {
-  "name": "myol-front",
+  "name": "o-mate-front",
   "version": "0.0.1",
-  "description": "yolo orienteering",
-  "productName": "yolo orienteering",
+  "description": "o-mate orienteering",
+  "productName": "o-mate orienteering",
   "author": "Michael Scheurer <michael.scheurer@seccom.ch>",
   "type": "module",
   "private": true,
