@@ -58,6 +58,7 @@ export default class RaceFilter {
             },
           }
         ],
+        // reset date filter
         date: {}
       } as QueryFilter<CustomDirectusTypes, Race>
 
