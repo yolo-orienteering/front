@@ -12,9 +12,10 @@
       </div>
     </div>
     <!-- menu entries -->
-    <div class="row q-mt-sm text-primary">
+    <div class="row text-primary">
       <div v-for="(menuEntry, menuEntryId) in menuEntries" :key="menuEntryId"
-        @click="$router.push({ name: menuEntry.routeName })" class="col-4 text-center text-caption">
+        @click="$router.push({ name: menuEntry.routeName })" class="col-4 q-pt-sm text-center text-caption"
+        :class="[{ 'active-menu-border': isActiveRoute(menuEntry.routeName) }]">
         <div>
           <q-icon :name="menuEntry.icon" size="sm" />
         </div>
@@ -26,7 +27,7 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { useRouter } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 
 interface IMenuEntry {
   name: string,
@@ -53,6 +54,7 @@ const menuEntries = ref<IMenuEntry[]>([
 ])
 const showBackButton = ref<boolean>(false)
 const router = useRouter()
+const route = useRoute()
 
 // decide whether to show the back button or not
 router.afterEach((to) => {
@@ -66,4 +68,14 @@ router.afterEach((to) => {
   }
 })
 
+function isActiveRoute(routeName: string): boolean {
+  return route.name === routeName
+}
+
 </script>
+
+<style lang="scss">
+.active-menu-border {
+  border-bottom: 2px solid $primary;
+}
+</style>
