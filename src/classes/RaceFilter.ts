@@ -24,6 +24,10 @@ export default class RaceFilter {
     let limit = this.limit
     let page = this.page
 
+    const startOfToday = new Date()
+    startOfToday.setHours(0, 0, 0, 0)
+    const todayIso = startOfToday.toISOString()
+
     // in case of initial load
     if (initialLoad && page > 1) {
       limit = page * limit
@@ -37,7 +41,7 @@ export default class RaceFilter {
       sort: 'date',
       filter: {
         date: {
-          _gte: new Date().toISOString()
+          _gte: todayIso
         }
       }
     } as RaceQuery
@@ -54,7 +58,7 @@ export default class RaceFilter {
           },
           {
             deadline: {
-              _gte: new Date().toISOString()
+              _gte: todayIso
             },
           }
         ],
