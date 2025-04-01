@@ -10,6 +10,7 @@ export function useMyDepartures () {
   const syncCenter = useSyncCenter()
 
   const myDepartures = ref<UserDeparture[]>([])
+  const lastUserIdentifier = ref<string | false>(syncCenter.userIdentifier)
 
   // local storage
   const localStorage = useQuasar().localStorage
@@ -20,19 +21,9 @@ export function useMyDepartures () {
     readMyDeparturesFromStore()
     // 2. try to update from remote
     await updateMyDeparturesFromDirectus()
-  })
 
-  // update departures whenever user object changes
-  // todo: only every 3 seconds to avoid on every keyboard stroke
-  watch(
-    () => syncCenter.userIdentifier,
-    async () => {
-      await updateMyDeparturesFromDirectus()
-    },
-    {
-      deep: true
-    }
-  )
+    departureFetchEngine()
+  })
 
   // update local store
   watch(
@@ -40,6 +31,15 @@ export function useMyDepartures () {
     () => localStorage.set(MY_DEPARTURES_KEY, myDepartures.value),
     {deep: true}
   )
+
+  function departureFetchEngine () {
+    setInterval(() => {
+      if (syncCenter.userIdentifier && syncCenter.userIdentifier !== lastUserIdentifier.value) {
+        lastUserIdentifier.value = syncCenter.userIdentifier
+        updateMyDeparturesFromDirectus()
+      }
+    }, 1500)
+  }
 
   function readMyDeparturesFromStore (): void {
     const myDeparturesFromStore = localStorage.getItem<UserDeparture[]>(MY_DEPARTURES_KEY)
