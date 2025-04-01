@@ -24,9 +24,9 @@ export default class RaceFilter {
     let limit = this.limit
     let page = this.page
 
-    const startOfToday = new Date()
-    startOfToday.setHours(0, 0, 0, 0)
-    const todayIso = startOfToday.toISOString()
+    const startTowDaysAgo = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate() - 2)
+    startTowDaysAgo.setHours(0, 0, 0, 0)
+    const twoDaysAgoISO = startTowDaysAgo.toISOString()
 
     // in case of initial load
     if (initialLoad && page > 1) {
@@ -41,7 +41,7 @@ export default class RaceFilter {
       sort: 'date',
       filter: {
         date: {
-          _gte: todayIso
+          _gte: twoDaysAgoISO
         }
       }
     } as RaceQuery
@@ -58,7 +58,7 @@ export default class RaceFilter {
           },
           {
             deadline: {
-              _gte: todayIso
+              _gte: twoDaysAgoISO
             },
           }
         ],

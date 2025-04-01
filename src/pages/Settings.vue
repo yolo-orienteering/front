@@ -17,7 +17,8 @@
       </div>
       <div class="col-12 q-px-sm q-pt-sm text-body1">
         <div v-for="(milestone, milestoneIndex) in milestones" :key="milestoneIndex" class="q-pb-sm">
-          <q-icon name="check_box_outline_blank" size="sm" class="q-mr-xs" /> {{ milestone.text }}
+          <q-icon :name="milestone.done ? 'check_box' : 'check_box_outline_blank'" size="sm" class="q-mr-xs" /> {{
+            milestone.text }}
         </div>
       </div>
     </div>
@@ -58,8 +59,8 @@ const milestones: { text: string, done: boolean }[] = [
     text: 'o-mate als IOS App',
     done: false
   }, {
-    text: 'Zeige deine Startzeit automatisch an, wenn Du an einem Lauf angemeldet bist.',
-    done: false
+    text: '01.04.2025: Zeige deine Startzeit automatisch an, wenn Du an einem Lauf angemeldet bist.',
+    done: true
   }, {
     text: 'Übersetze die App in andere Sprachen, insbesondere Englisch',
     done: false

@@ -3,9 +3,9 @@
     <div id="teleport-to-menu" />
 
     <!-- back button -->
-    <div v-if="showBackButton" class="row justify-center bg-white border-bottom-primary">
+    <div v-if="showBackButton" class="row justify-center border-bottom-primary">
       <div class="col-auto q-py-sm">
-        <q-btn size="md" outline rounded color="secondary" @click="$router.go(-1)">
+        <q-btn size="md" outline rounded @click="$router.go(-1)" color="primary">
           <span class="fal fa-chevron-left q-mr-xs" />
           Zurück
         </q-btn>

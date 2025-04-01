@@ -16,8 +16,18 @@
                 <div class="col-6">
                   {{ formatDate(race.date!, 'dd, DD.MM yyyy') }}
                 </div>
+                <!-- deadline -->
                 <div v-if="race.deadline" class="col-6 text-right">
-                  <q-chip color="secondary" dense :outline="!syncCenter.filter.deadline">
+                  <q-btn v-if="shouldAddUser(race)" rounded size="sm" color="primary" href="#/settings">
+                    Deine Startzeit
+                  </q-btn>
+
+                  <q-chip v-else-if="syncCenter.myDepartures.getDepartureFor(race.id)">
+                    {{ syncCenter.myDepartures.getFormatedDeparture(race.id) }}
+                  </q-chip>
+
+                  <q-chip v-else color="secondary" dense :outline="!syncCenter.filter.deadline"
+                    :class="[{ 'text-strike': new Date() > new Date(race.deadline!) }]">
                     {{ formatDate(race.deadline!, 'dd, DD.MMM') }}
                   </q-chip>
                 </div>
@@ -38,9 +48,9 @@
               </div>
             </template>
             <!-- text body -->
-            <div class="row">
+            <div class="row justify-between items-center">
               <div class="col-auto">
-                <span class="fal fa-map-pin q-mr-xs" /> {{ race.city || race.mapName || 'vakant' }} {{ race.region ?
+                {{ race.city || race.mapName || 'vakant' }} {{ race.region ?
                   `(${race.region})`
                   :
                   '' }}
@@ -62,11 +72,10 @@
 
 <script setup lang="ts">
 import moment from 'moment'
-import { Race } from 'src/types/DirectusTypes'
+import { Race, RaceCategory } from 'src/types/DirectusTypes'
 import { formatDate } from 'src/utils/DateUtils'
 import { useSyncCenter } from 'src/stores/syncCenter'
 import { useRace } from 'src/composables/useRace'
-import { computed } from 'vue'
 
 const syncCenter = useSyncCenter()
 const raceCompose = useRace()
@@ -83,6 +92,10 @@ const emit = defineEmits<{ (e: 'loadMore'): void }>()
 
 function loadMore() {
   emit('loadMore')
+}
+
+function shouldAddUser(race: Race): boolean {
+  return !syncCenter.userIdentifier && !!race.departureLink
 }
 
 function getMonthlyDelimiter(date: string): string {

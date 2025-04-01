@@ -19,7 +19,15 @@
 
     <!-- deadline -->
     <div v-if="race.deadline" class="col-12 q-pt-md">
-      <q-banner dense rounded class="bg-secondary text-white">
+      <q-banner v-if="myDeparture" dense rounded class="bg-green text-white">
+        <template #avatar>
+          <q-icon name="change_history" size="sm" />
+        </template>
+        {{ syncCenter.user?.first_name }}, du startest um <b>{{ syncCenter.myDepartures.getFormatedDeparture(race.id)
+          }}</b>
+      </q-banner>
+
+      <q-banner v-else dense rounded class="bg-secondary text-white">
         <span class="fal fa-bells" />
         Anmeldung erforderlich bis am {{ formatDate(race.deadline, 'dd, DD.MMM YYYY') }}
       </q-banner>
@@ -28,6 +36,14 @@
     <!-- date, location, map name -->
     <div class="col-12 q-pt-md q-pl-sm text-body1">
       <div class="row">
+        <!-- your departure -->
+        <div v-if="myDeparture" class="col-12 q-pt-xs">
+          <q-icon name="change_history" class="q-mr-xs" />
+          {{ raceCategory?.name ? `${raceCategory.name} | ` : '' }}
+          {{ raceCategory?.distanceInMeter ? `${raceCategory.distanceInMeter / 1000} km | ` : '' }}
+          {{ raceCategory?.equidistanceInMeter ? `${raceCategory.equidistanceInMeter} m | ` : '' }}
+          {{ raceCategory?.amountOfControls ? `${raceCategory.amountOfControls} p` : '' }}
+        </div>
         <!-- date -->
         <div class="col-12 q-pt-xs">
           <q-icon name="event" class="q-mr-xs" />
@@ -108,10 +124,10 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 import { useRoute } from 'vue-router'
 import SbbTimetable from 'components/publicTransport/switzerland/SbbTimetable.vue'
-import { Race } from 'src/types/DirectusTypes'
+import { Race, RaceCategory, UserDeparture } from 'src/types/DirectusTypes'
 import { useApi } from 'src/stores/useApi'
 import { readItem } from '@directus/sdk'
 import { formatDate } from 'src/utils/DateUtils'
@@ -131,4 +147,7 @@ onMounted(async () => {
 
   race.value = await directus.request<Race>(readItem('Race', raceId))
 })
+
+const myDeparture = computed<UserDeparture | undefined>(() => syncCenter.myDepartures.getDepartureFor(race.value?.id))
+const raceCategory = computed<RaceCategory | undefined | null>(() => myDeparture.value?.raceCategory as RaceCategory | null | undefined)
 </script>

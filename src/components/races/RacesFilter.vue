@@ -2,21 +2,21 @@
   <div v-if="filter"
     class="row bg-white items-center races-filter-container q-py-sm no-wrap q-px-sm border-bottom-primary">
     <!-- filter icon -->
-    <div class="col-auto text-secondary">
+    <div class="col-auto text-primary">
       <q-icon name="tune" size="sm" class="q-mx-sm" />
     </div>
 
     <!-- search -->
     <div class="q-mr-xs" :class="[!!filter?.searchString ? 'col-6' : 'col-4']">
-      <q-input v-model="filter.searchString" :loading="loading" outlined label="Lauf suchen" color="secondary" dense
-        rounded label-color="secondary" clearable clear-icon="close" />
+      <q-input v-model="filter.searchString" :loading="loading" outlined label="Lauf suchen" color="primary" dense
+        rounded label-color="primary" clearable clear-icon="close" />
     </div>
 
     <!-- deadline -->
     <div class="col-auto">
       <q-chip @click="updateFilter({ deadline: !filter.deadline })" :selected="filter.deadline" outline
-        class="q-ml-none" color="secondary" dense size="xl"
-        :class="filter.deadline ? 'bg-secondary text-white' : 'bg-white'">
+        class="q-ml-none" color="primary" dense size="xl"
+        :class="filter.deadline ? 'bg-primary text-white' : 'bg-white'">
         <span class="text-body2">
           <q-icon v-if="!filter.deadline" name="notifications" size="sm" />
           Anmeldeschluss
@@ -26,8 +26,8 @@
     <!-- relevance -->
     <div class="col-auto">
       <q-chip @click="updateFilter({ geographicalScale: filter.geographicalScale ? null : 'national' })"
-        :selected="!!filter.geographicalScale" outline icon-selected="" class="q-ml-none" color="secondary" dense
-        size="xl" :class="filter.geographicalScale ? 'bg-secondary text-white' : 'bg-white'">
+        :selected="!!filter.geographicalScale" outline icon-selected="" class="q-ml-none" color="primary" dense
+        size="xl" :class="filter.geographicalScale ? 'bg-primary text-white' : 'bg-white'">
         <span class="text-body2">
           <q-icon v-if="!filter.geographicalScale" name="location_on" size="sm" />
           Nat. Meisterschaft
@@ -39,7 +39,7 @@
     <div :class="[filter.regions ? 'col-7' : 'col-5']">
       <q-select v-model="filter.regions" :options="regionStore.regions.map(region => region.region)"
         @update:model-value="emits('update:filter')" @clear="emits('update:filter')" dense rounded multiple outlined
-        clearable color="secondary" label-color="secondary" label="Regionen" />
+        clearable color="primary" label-color="primary" label="Regionen" />
     </div>
   </div>
 </template>
