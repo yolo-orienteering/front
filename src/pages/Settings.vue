@@ -23,26 +23,14 @@
       </div>
     </div>
 
-    <!-- deadline notifications -->
-    <div class="row justify-between items-center q-pt-xl">
-      <div class="text-h5">
-        Benachrichtigungen
+    <div class="row q-mt-xl">
+      <div class="col-12 text-h5">
+        Datenschutz
+      </div>
+      <div class="col-12 q-pt-sm">
+        <q-btn :to="{ name: 'privacy-policy' }" outline>Datenschutzerklärung</q-btn>
       </div>
     </div>
-
-    <div class="row q-pb-xl">
-      <div class="text-subtitle1 q-px-sm q-pt-xs">
-        Anmeldeschlüsse - Funktion in Entwicklung
-      </div>
-      <div class="col-12 q-px-sm">
-        <q-btn-toggle v-model="deadlineAlert" :options="[
-          { label: 'Alle', value: 'all' },
-          { label: 'Nur meine Läufe', value: 'only-mine' },
-          { label: 'Keine', value: 'none' }
-        ]" class="q-mt-sm" />
-      </div>
-    </div>
-
   </div>
 </template>
 
@@ -53,10 +41,10 @@ const deadlineAlert = ref('all')
 
 const milestones: { text: string, done: boolean }[] = [
   {
-    text: 'o-mate als Android App',
-    done: false
+    text: '05.04.2025 Android App',
+    done: true
   }, {
-    text: 'o-mate als IOS App',
+    text: 'IOS App',
     done: false
   }, {
     text: '01.04.2025: Zeige deine Startzeit automatisch an, wenn Du an einem Lauf angemeldet bist.',

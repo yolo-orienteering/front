@@ -28,6 +28,12 @@ const routes: RouteRecordRaw[] = [
         path: 'race/:id',
         component: () => import('pages/races/Race.vue'),
         props: true
+      },
+      {
+        name: 'privacy-policy',
+        path: 'privacy-policy',
+        component: () => import('pages/PrivacyPolicy.vue'),
+        props: true
       }
     ]
   },
