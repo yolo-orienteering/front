@@ -15,7 +15,7 @@
           <q-icon name="info" size="md" class="q-pr-sm" />
         </template>
         <template #action>
-          <q-btn href="/">
+          <q-btn to="/">
             Jetzt Läufe entdecken
           </q-btn>
         </template>
