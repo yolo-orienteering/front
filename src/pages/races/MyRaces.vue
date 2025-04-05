@@ -5,7 +5,7 @@
     </div>
 
     <div v-if="syncCenter.myRacesSorted.length" class="col-12">
-      <race-timeline :races="syncCenter.myRacesSorted" :show-load-more="false" />
+      <race-timeline :races="syncCenter.myRacesSorted" :show-load-more="false" :loading="false" />
     </div>
 
     <div v-else class="col-12 q-pt-md">

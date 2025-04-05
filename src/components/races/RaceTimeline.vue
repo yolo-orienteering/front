@@ -1,5 +1,24 @@
 <template>
-  <div class="row justify-center">
+  <div v-if="props.loading" class="row">
+    <div v-for="i in [...Array(10).keys()]" :key="i" class="col-12 q-pb-md">
+      <q-item>
+        <q-item-section avatar>
+          <q-skeleton type="QAvatar" />
+        </q-item-section>
+
+        <q-item-section>
+          <q-item-label>
+            <q-skeleton type="text" />
+          </q-item-label>
+          <q-item-label caption>
+            <q-skeleton type="text" width="65%" />
+          </q-item-label>
+        </q-item-section>
+      </q-item>
+    </div>
+  </div>
+
+  <div v-else class="row justify-center">
     <div class="col-12">
       <q-timeline layout="dense">
         <template v-for="race in races" :key="race.id">
@@ -72,7 +91,7 @@
 
 <script setup lang="ts">
 import moment from 'moment'
-import { Race, RaceCategory } from 'src/types/DirectusTypes'
+import { Race } from 'src/types/DirectusTypes'
 import { formatDate } from 'src/utils/DateUtils'
 import { useSyncCenter } from 'src/stores/syncCenter'
 import { useRace } from 'src/composables/useRace'
@@ -81,8 +100,9 @@ const syncCenter = useSyncCenter()
 const raceCompose = useRace()
 
 const props = withDefaults(defineProps<{
-  races: Race[],
+  races: Race[]
   showLoadMore?: boolean
+  loading: boolean
 }>(), {
   races: () => [],
   showLoadMore: true

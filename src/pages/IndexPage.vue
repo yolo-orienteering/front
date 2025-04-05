@@ -5,7 +5,7 @@
       <races-filter v-show="races" :loading="loading" @update:filter="updateFilter()" />
     </Teleport>
 
-    <race-timeline v-if="races" :races="races" @load-more="loadMore()" />
+    <race-timeline v-if="races" :races="races" :loading="loading" @load-more="loadMore()" />
   </div>
 </template>
 
@@ -36,9 +36,11 @@ onMounted(async () => {
 })
 
 async function initialLoad(): Promise<void> {
+  loading.value = true
   const query = syncCenter.filter.composeRaceQuery({ initialLoad: true })
   races.value = await directus.request<Race[]>(readItems('Race', query))
   eventBus.emit('scrollToSavedPosition')
+  loading.value = false
 }
 
 async function updateFilter(): Promise<void> {
