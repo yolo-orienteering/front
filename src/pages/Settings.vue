@@ -23,7 +23,7 @@
       </div>
     </div>
 
-    <div class="row q-mt-xl">
+    <div class="row q-my-xl">
       <div class="col-12 text-h5">
         Datenschutz
       </div>
@@ -41,19 +41,31 @@ const deadlineAlert = ref('all')
 
 const milestones: { text: string, done: boolean }[] = [
   {
-    text: '05.04.2025 Android App',
+    text: 'Zeige deine Startzeit automatisch an, wenn Du an einem Lauf angemeldet bist. (01.04.2025)',
+    done: true
+  }, {
+    text: 'Android App (05.04.2025)',
     done: true
   }, {
     text: 'IOS App',
     done: false
   }, {
-    text: '01.04.2025: Zeige deine Startzeit automatisch an, wenn Du an einem Lauf angemeldet bist.',
-    done: true
-  }, {
-    text: 'Übersetze die App in andere Sprachen, insbesondere Englisch',
+    text: 'Ältere Läufe anzeigen.',
     done: false
   }, {
-    text: 'Synchronisiere deine vorgemerkten Läufe automatisch mit deinem Kalender.',
+    text: 'Weisungen automatisch von den Veranstaltungswebseiten abgreifen.',
+    done: false
+  }, {
+    text: 'Informationen aus den Weisungen mit KI als strukturierte Daten übersichtlich zur Verfügung stellen.',
+    done: false
+  }, {
+    text: 'Übersetze die App in andere Sprachen.',
+    done: false
+  }, {
+    text: 'Resultate in der App darstellen.',
+    done: false
+  }, {
+    text: 'Synchronisiere die vorgemerkten Läufe automatisch mit Kalender.',
     done: false
   }, {
     text: 'Plane deine Anreise mit einer integrierten Karte und dem genauem Standort des OLs.',
