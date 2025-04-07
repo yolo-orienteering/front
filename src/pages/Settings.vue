@@ -47,8 +47,8 @@ const milestones: { text: string, done: boolean }[] = [
     text: 'Android App (05.04.2025)',
     done: true
   }, {
-    text: 'IOS App',
-    done: false
+    text: 'IOS App (07.04.2025)',
+    done: true
   }, {
     text: 'Ältere Läufe anzeigen.',
     done: false
