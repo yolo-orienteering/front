@@ -1,15 +1,11 @@
 <template>
   <div v-if="filter"
     class="row bg-white items-center races-filter-container q-py-sm no-wrap q-px-sm border-bottom-primary">
-    <!-- filter icon -->
-    <div class="col-auto text-primary">
-      <q-icon name="tune" size="sm" class="q-mx-sm" />
-    </div>
 
-    <!-- search -->
-    <div class="q-mr-xs" :class="[!!filter?.searchString ? 'col-6' : 'col-4']">
-      <q-input v-model="filter.searchString" :loading="loading" outlined label="Lauf suchen" color="primary" dense
-        rounded label-color="primary" clearable clear-icon="close" />
+    <div v-if="filter.previousDays" class="col-auto">
+      <q-chip color="primary" text-color="white" size="xl" dense removable @remove="updateFilter({ previousDays: 0 })">
+        <span class="text-body2">-{{ filter.previousDays }} {{ filter.previousDays > 1 ? `Tage` : `Tag` }}</span>
+      </q-chip>
     </div>
 
     <!-- deadline -->
@@ -33,6 +29,12 @@
           Nat. Meisterschaft
         </span>
       </q-chip>
+    </div>
+
+    <!-- search -->
+    <div class="q-mr-xs" :class="[!!filter?.searchString ? 'col-6' : 'col-4']">
+      <q-input v-model="filter.searchString" :loading="loading" outlined label="Lauf suchen" color="primary" dense
+        rounded label-color="primary" clearable clear-icon="close" />
     </div>
 
     <!-- region -->
@@ -85,13 +87,20 @@ function searchEngine() {
   }, 1000)
 }
 
-function updateFilter({ deadline, geographicalScale }: { deadline?: boolean, geographicalScale?: string | null }) {
+function updateFilter(
+  { deadline, geographicalScale, previousDays }:
+    { deadline?: boolean, geographicalScale?: string | null, previousDays?: number }
+) {
   if (deadline !== undefined) {
     filter.deadline = deadline
   }
 
   if (geographicalScale !== undefined) {
     filter.geographicalScale = geographicalScale || undefined
+  }
+
+  if (previousDays !== undefined) {
+    filter.previousDays = previousDays
   }
 
   emits('update:filter')

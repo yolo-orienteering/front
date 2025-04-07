@@ -5,7 +5,8 @@
       <races-filter v-show="races" :loading="loading" @update:filter="updateFilter()" />
     </Teleport>
 
-    <race-timeline v-if="races" :races="races" :loading="loading" @load-more="loadMore()" />
+    <race-timeline v-if="races" :races="races" :loading="loading" @load-more="loadMore()"
+      @load-previous="updateFilter()" />
   </div>
 </template>
 

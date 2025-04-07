@@ -8,6 +8,7 @@ export default class RaceFilter {
   public searchString: string | undefined
   public geographicalScale: string | undefined
   public regions?: string[]
+  public previousDays: number
   public limit: number
   public page: number
 
@@ -16,6 +17,7 @@ export default class RaceFilter {
     this.searchString = props?.searchString
     this.geographicalScale = props?.geographicalScale
     this.regions = props?.regions || []
+    this.previousDays = props?.previousDays || 0
     this.limit = props?.limit || 25
     this.page = props?.page || 1
   }
@@ -24,9 +26,9 @@ export default class RaceFilter {
     let limit = this.limit
     let page = this.page
 
-    const startTowDaysAgo = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate() - 2)
-    startTowDaysAgo.setHours(0, 0, 0, 0)
-    const twoDaysAgoISO = startTowDaysAgo.toISOString()
+    const filterDate = new Date(new Date().setHours(0, 0, 0, 0))
+    filterDate.setDate(filterDate.getDate() - this.previousDays + 1)
+    const filterDateIso = filterDate.toISOString()
 
     // in case of initial load
     if (initialLoad && page > 1) {
@@ -41,7 +43,7 @@ export default class RaceFilter {
       sort: 'date',
       filter: {
         date: {
-          _gte: twoDaysAgoISO
+          _gte: filterDateIso
         }
       }
     } as RaceQuery
@@ -58,7 +60,7 @@ export default class RaceFilter {
           },
           {
             deadline: {
-              _gte: twoDaysAgoISO
+              _gte: filterDateIso
             },
           }
         ],

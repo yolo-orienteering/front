@@ -1,4 +1,5 @@
 <template>
+  <!-- loadin animation -->
   <div v-if="props.loading" class="row">
     <div v-for="i in [...Array(10).keys()]" :key="i" class="col-12 q-pb-md">
       <q-item>
@@ -18,13 +19,26 @@
     </div>
   </div>
 
+  <!-- races list -->
   <div v-else class="row justify-center">
     <div class="col-12">
       <q-timeline layout="dense">
-        <template v-for="race in races" :key="race.id">
+        <template v-for="(race, raceIndex) in races" :key="race.id">
           <!-- monthly delimiter -->
           <q-timeline-entry v-if="monthChangeInArray(race.id)" heading>
-            {{ getMonthlyDelimiter(syncCenter.filter.deadline ? race.deadline! : race.date!) }}
+            <div class="row">
+              <!-- month name -->
+              <div class="col-8">
+                {{ getMonthlyDelimiter(syncCenter.filter.deadline ? race.deadline! : race.date!) }}
+              </div>
+
+              <!-- show older dates -->
+              <div v-if="raceIndex === 0 && !hidePreviousBtn" class="col-4 text-right">
+                <q-btn size="sm" outline class="q-ml-sm" color="primary" @click="loadPreviousRaces()">
+                  <q-icon name="arrow_upward" class="q-mr-xs" /> Ältere OLs
+                </q-btn>
+              </div>
+            </div>
           </q-timeline-entry>
 
           <!-- races -->
@@ -37,7 +51,7 @@
                 </div>
                 <!-- deadline -->
                 <div v-if="race.deadline" class="col-6 text-right">
-                  <q-btn v-if="shouldAddUser(race)" rounded size="sm" color="primary" href="#/settings">
+                  <q-btn v-if="shouldAddUser(race)" rounded unelevated size="sm" color="secondary" href="#/settings">
                     Deine Startzeit
                   </q-btn>
 
@@ -81,7 +95,7 @@
     </div>
 
     <!-- pagination -->
-    <div v-if="showLoadMore" class="col-12 text-center q-pb-lg">
+    <div v-if="!hideLoadMore" class="col-12 text-center q-pb-lg">
       <q-btn outline @click="loadMore()">
         Mehr Läufe laden
       </q-btn>
@@ -101,17 +115,38 @@ const raceCompose = useRace()
 
 const props = withDefaults(defineProps<{
   races: Race[]
-  showLoadMore?: boolean
+  hideLoadMore?: boolean
+  hidePreviousBtn?: boolean
   loading: boolean
 }>(), {
   races: () => [],
-  showLoadMore: true
+  hideLoadMore: false,
+  hidePreviousBtn: false
 })
 
-const emit = defineEmits<{ (e: 'loadMore'): void }>()
+const emit = defineEmits<{
+  (e: 'loadMore'): void,
+  (e: 'loadPrevious'): void
+}>()
 
 function loadMore() {
   emit('loadMore')
+}
+
+function loadPreviousRaces() {
+  let daysToChange = 7
+  const previousDays = syncCenter.filter.previousDays
+  console.log(previousDays)
+  if (previousDays === 0 || previousDays === 1) {
+    daysToChange = 1
+  }
+
+  if (previousDays === 2) {
+    daysToChange = 5
+  }
+
+  syncCenter.filter.previousDays += daysToChange
+  emit('loadPrevious')
 }
 
 function shouldAddUser(race: Race): boolean {

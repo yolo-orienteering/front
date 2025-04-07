@@ -77,7 +77,8 @@ export const useSyncCenter = defineStore('syncCenter', () => {
    */
 
   const myRacesSorted = computed<Race[]>(() => {
-    const todayMs = new Date(2025, 2, 28).setHours(0, 0, 0, 0)
+    
+    const fiveDaysAgoMs = new Date(new Date().setDate(new Date().getDate() - 4)).setHours(0, 0, 0, 0)
     return myRaces.value
       .sort((a, b) => {
         const aDate = a.date
@@ -91,7 +92,7 @@ export const useSyncCenter = defineStore('syncCenter', () => {
         if (!race.date) {
           return false
         }
-        return new Date(race.date).setHours(0, 0, 0, 0) >= todayMs
+        return new Date(race.date).setHours(0, 0, 0, 0) >= fiveDaysAgoMs
       })
   })
 
