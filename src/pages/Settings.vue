@@ -59,6 +59,12 @@ const milestones: { text: string, done: boolean }[] = [
     text: 'Informationen aus den Weisungen mit KI als strukturierte Daten übersichtlich zur Verfügung stellen.',
     done: false
   }, {
+    text: 'Front-end auf Nuxtjs/Vuetify umschreiben für SSR-Untersützung und SEO-Optimierung.',
+    done: false
+  }, {
+    text: 'Desktop-Version programmieren.',
+    done: false
+  }, {
     text: 'Übersetze die App in andere Sprachen.',
     done: false
   }, {
