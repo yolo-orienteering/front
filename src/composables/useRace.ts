@@ -6,7 +6,7 @@ type RaceLinkType = 'event' | 'publication' | 'ranking' | 'inscription' | 'liveR
 export function useRace () {
   const syncCenter = useSyncCenter()
 
-  function openLink ({race, linkType}: {race: Race, linkType: RaceLinkType}) {
+  function composeLink ({race, linkType}: {race: Race, linkType: RaceLinkType}): string | undefined {
     let linkToOpen: string | undefined | null = undefined
     switch (linkType) {
       case 'event':
@@ -28,10 +28,7 @@ export function useRace () {
         break
     }
 
-    if (!linkToOpen) {
-      return
-    }
-    window.open(linkToOpen, '_blank')
+    return linkToOpen || undefined
   }
 
   function addOrRemoveRace(race: Race) {
@@ -45,7 +42,7 @@ export function useRace () {
 
 
   return {
-    openLink,
+    composeLink,
     addOrRemoveRace
   }
 }

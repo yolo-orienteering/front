@@ -24,7 +24,7 @@
           <q-icon name="change_history" size="sm" />
         </template>
         {{ syncCenter.user?.first_name }}, du startest um <b>{{ syncCenter.myDepartures.getFormatedDeparture(race.id)
-          }}</b>
+        }}</b>
       </q-banner>
 
       <q-banner v-else dense rounded class="bg-secondary text-white">
@@ -74,7 +74,8 @@
       <div class="row q-col-gutter-sm q-pl-sm q-pt-md">
         <!-- Ausschreibung -->
         <div class="col-auto">
-          <q-btn v-if="race.publicationLink" outline @click="raceCompose.openLink({ race, linkType: 'publication' })">
+          <q-btn v-if="race.publicationLink" outline :href="raceCompose.composeLink({ race, linkType: 'publication' })"
+            target="_blank">
             <q-icon name="picture_as_pdf" class="q-mr-sm" />
             Ausschreibung
           </q-btn>
@@ -82,7 +83,7 @@
 
         <!-- website -->
         <div v-if="race.eventLink" class="col-auto">
-          <q-btn outline @click="raceCompose.openLink({ race, linkType: 'event' })">
+          <q-btn outline :href="raceCompose.composeLink({ race, linkType: 'event' })" target="_blank">
             <q-icon name="open_in_new" class="q-mr-sm" />
             Webseite
           </q-btn>
@@ -90,7 +91,7 @@
 
         <!-- inscription link -->
         <div v-if="race.inscriptionLink" class="col-auto">
-          <q-btn outline @click="raceCompose.openLink({ race, linkType: 'inscription' })">
+          <q-btn outline :href="raceCompose.composeLink({ race, linkType: 'inscription' })" target="_blank">
             <q-icon name="play_circle" class="q-mr-sm" />
             Anmelden
           </q-btn>
@@ -98,7 +99,7 @@
 
         <!-- live results -->
         <div v-if="race.liveResultLink" class="col-auto">
-          <q-btn outline @click="raceCompose.openLink({ race, linkType: 'liveResult' })">
+          <q-btn outline :href="raceCompose.composeLink({ race, linkType: 'liveResult' })" target="_blank">
             <q-icon name="live_tv" class="q-mr-sm" />
             Live-Resultate
           </q-btn>
@@ -106,7 +107,7 @@
 
         <!-- ranking -->
         <div v-if="race.rankingLink" class="col-auto">
-          <q-btn outline @click="raceCompose.openLink({ race, linkType: 'ranking' })">
+          <q-btn outline :href="raceCompose.composeLink({ race, linkType: 'ranking' })" target="_blank">
             <q-icon name="list" class="q-mr-sm" />
             Rangliste
           </q-btn>
