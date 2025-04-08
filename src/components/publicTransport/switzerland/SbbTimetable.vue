@@ -102,7 +102,7 @@ function autoFillForm() {
 function callSbb() {
   const link = composeSbbLink()
   setTimeout(() => {
-    window.open(link, '_blank')
+    window.location.href = link
   }, 50)
 }
 
