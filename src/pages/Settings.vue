@@ -30,11 +30,6 @@
       <div class="col-12 q-pt-sm">
         <q-btn :to="{ name: 'privacy-policy' }" outline>Datenschutzerklärung</q-btn>
       </div>
-
-      <div>
-        <a href="https://seccom.ch">By Seccom</a>
-        <a href="https://seccom.ch" target="_blank">By Seccom</a>
-      </div>
     </div>
   </div>
 </template>
