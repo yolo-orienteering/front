@@ -1,17 +1,10 @@
 <template>
   <div v-if="filter"
     class="row bg-white items-center races-filter-container q-py-sm no-wrap q-px-sm border-bottom-primary">
-
-    <div v-if="filter.previousDays" class="col-auto">
-      <q-chip color="primary" text-color="white" size="xl" dense removable @remove="updateFilter({ previousDays: 0 })">
-        <span class="text-body2">-{{ filter.previousDays }} {{ filter.previousDays > 1 ? `Tage` : `Tag` }}</span>
-      </q-chip>
-    </div>
-
     <!-- deadline -->
     <div class="col-auto">
       <q-chip @click="updateFilter({ deadline: !filter.deadline })" :selected="filter.deadline" outline
-        class="q-ml-none" color="primary" dense size="xl"
+        class="q-ml-none" color="primary" dense size="xl" icon-selected="notifications"
         :class="filter.deadline ? 'bg-primary text-white' : 'bg-white'">
         <span class="text-body2">
           <q-icon v-if="!filter.deadline" name="notifications" size="sm" />
@@ -19,14 +12,33 @@
         </span>
       </q-chip>
     </div>
+
     <!-- relevance -->
     <div class="col-auto">
       <q-chip @click="updateFilter({ geographicalScale: filter.geographicalScale ? null : 'national' })"
-        :selected="!!filter.geographicalScale" outline icon-selected="" class="q-ml-none" color="primary" dense
-        size="xl" :class="filter.geographicalScale ? 'bg-primary text-white' : 'bg-white'">
+        :selected="!!filter.geographicalScale" outline icon-selected="health_and_safety" class="q-ml-none"
+        color="primary" dense size="xl" :class="filter.geographicalScale ? 'bg-primary text-white' : 'bg-white'">
         <span class="text-body2">
-          <q-icon v-if="!filter.geographicalScale" name="location_on" size="sm" />
+          <q-icon v-if="!filter.geographicalScale" name="health_and_safety" size="sm" />
           Nat. Meisterschaft
+        </span>
+      </q-chip>
+    </div>
+
+    <!-- previous -->
+    <div class="col-auto">
+      <q-chip @click="updateFilter({ previousDays: 'add' })" @remove="updateFilter({ previousDays: 'reset' })"
+        :selected="!!filter.previousDays" outline icon-selected="touch_app" class="q-ml-none" color="primary" dense
+        size="xl" :class="filter.previousDays ? 'bg-primary text-white' : 'bg-white'"
+        :removable="!!filter.previousDays">
+        <span class="text-body2">
+          <q-icon v-if="!filter.previousDays" name="refresh" size="sm" />
+          <span v-if="filter.previousDays">
+            -{{ filter.previousDays }} {{ filter.previousDays > 1 ? `Tage` : `Tag` }}
+          </span>
+          <span v-else>
+            Frühere OLs
+          </span>
         </span>
       </q-chip>
     </div>
@@ -89,7 +101,7 @@ function searchEngine() {
 
 function updateFilter(
   { deadline, geographicalScale, previousDays }:
-    { deadline?: boolean, geographicalScale?: string | null, previousDays?: number }
+    { deadline?: boolean, geographicalScale?: string | null, previousDays?: 'add' | 'reset' }
 ) {
   if (deadline !== undefined) {
     filter.deadline = deadline
@@ -100,10 +112,28 @@ function updateFilter(
   }
 
   if (previousDays !== undefined) {
-    filter.previousDays = previousDays
+    if (previousDays === 'reset') {
+      filter.previousDays = 0
+    } else if (previousDays === 'add') {
+      graduallyIncreasePreviousDays()
+    }
   }
 
   emits('update:filter')
+}
+
+function graduallyIncreasePreviousDays() {
+  let daysToChange = 7
+  const previousDays = filter.previousDays
+  if (previousDays === 0 || previousDays === 1) {
+    daysToChange = 1
+  }
+
+  if (previousDays === 2) {
+    daysToChange = 5
+  }
+
+  filter.previousDays += daysToChange
 }
 
 </script>

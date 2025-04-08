@@ -31,13 +31,6 @@
               <div class="col-8">
                 {{ getMonthlyDelimiter(syncCenter.filter.deadline ? race.deadline! : race.date!) }}
               </div>
-
-              <!-- show older dates -->
-              <div v-if="raceIndex === 0 && !hidePreviousBtn" class="col-4 text-right">
-                <q-btn size="sm" outline class="q-ml-sm" color="primary" @click="loadPreviousRaces()">
-                  <q-icon name="arrow_upward" class="q-mr-xs" /> Ältere OLs
-                </q-btn>
-              </div>
             </div>
           </q-timeline-entry>
 
@@ -116,37 +109,18 @@ const raceCompose = useRace()
 const props = withDefaults(defineProps<{
   races: Race[]
   hideLoadMore?: boolean
-  hidePreviousBtn?: boolean
   loading: boolean
 }>(), {
   races: () => [],
   hideLoadMore: false,
-  hidePreviousBtn: false
 })
 
 const emit = defineEmits<{
-  (e: 'loadMore'): void,
-  (e: 'loadPrevious'): void
+  (e: 'loadMore'): void
 }>()
 
 function loadMore() {
   emit('loadMore')
-}
-
-function loadPreviousRaces() {
-  let daysToChange = 7
-  const previousDays = syncCenter.filter.previousDays
-  console.log(previousDays)
-  if (previousDays === 0 || previousDays === 1) {
-    daysToChange = 1
-  }
-
-  if (previousDays === 2) {
-    daysToChange = 5
-  }
-
-  syncCenter.filter.previousDays += daysToChange
-  emit('loadPrevious')
 }
 
 function shouldAddUser(race: Race): boolean {
