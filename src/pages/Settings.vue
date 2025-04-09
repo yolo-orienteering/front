@@ -53,7 +53,7 @@ const milestones: { text: string, done: boolean }[] = [
     text: 'Ältere OLs anzeigen (07.04.2025)',
     done: true
   }, {
-    text: 'Weisungen automatisch von den Veranstaltungswebseiten abgreifen.',
+    text: 'Weisungen automatisch von den Veranstaltungswebseiten abgreifen. (10.04.2025)',
     done: false
   }, {
     text: 'Informationen aus den Weisungen mit KI als strukturierte Daten übersichtlich zur Verfügung stellen.',

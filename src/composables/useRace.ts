@@ -1,7 +1,7 @@
 import { useSyncCenter } from 'src/stores/syncCenter'
 import { Race } from 'src/types/DirectusTypes'
 
-type RaceLinkType = 'event' | 'publication' | 'ranking' | 'inscription' | 'liveResult'
+type RaceLinkType = 'event' | 'publication' | 'ranking' | 'inscription' | 'liveResult' | 'instruction'
 
 export function useRace () {
   const syncCenter = useSyncCenter()
@@ -23,6 +23,9 @@ export function useRace () {
         break
       case 'liveResult':
         linkToOpen = race.liveResultLink
+        break
+      case 'instruction':
+        linkToOpen = race.instructionLink
         break
       default:
         break
