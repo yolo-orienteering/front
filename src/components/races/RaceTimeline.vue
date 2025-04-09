@@ -48,7 +48,8 @@
                     Deine Startzeit
                   </q-btn>
 
-                  <q-chip v-else-if="syncCenter.myDepartures.getDepartureFor(race.id)">
+                  <q-chip color="secondary" size="md" unelevated rounded
+                    v-else-if="syncCenter.myDepartures.getDepartureFor(race.id)">
                     {{ syncCenter.myDepartures.getFormatedDeparture(race.id) }}
                   </q-chip>
 
