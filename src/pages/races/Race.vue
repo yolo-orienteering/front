@@ -24,7 +24,7 @@
           <q-icon name="change_history" size="sm" />
         </template>
         {{ syncCenter.user?.first_name }}, du startest um <b>{{ syncCenter.myDepartures.getFormatedDeparture(race.id)
-          }}</b>
+        }}</b>
       </q-banner>
 
       <q-banner v-else dense rounded class="bg-secondary text-white">
@@ -73,9 +73,9 @@
 
       <div class="row q-col-gutter-sm q-pl-sm q-pt-md">
         <!-- Instruction PDF -->
-        <div class="col-auto">
-          <q-btn v-if="race.instructionLink" :href="raceCompose.composeLink({ race, linkType: 'instruction' })"
-            target="_blank" color="black">
+        <div v-if="race.instructionLink" :href="raceCompose.composeLink({ race, linkType: 'instruction' })"
+          class="col-auto">
+          <q-btn target="_blank" color="black">
             <q-icon name="signpost" class="q-mr-sm" />
             Weisungen
           </q-btn>
