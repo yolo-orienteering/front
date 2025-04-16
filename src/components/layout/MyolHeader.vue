@@ -2,11 +2,7 @@
   <q-header class="text-primary bg-white" elevated reveal :reveal-offset="5">
     <div class="row items-center q-ma-sm">
       <div class="col-auto">
-        <img src="/img/logo.png" style="height: 65px; width: auto; display: block; margin: auto;" />
-      </div>
-      <div class="col-auto q-pl-md">
-        <h3 class="title">o-mate</h3>
-        <!-- <p class="claim">ORIENTEERING</p> -->
+        <img src="/img/o-mate-logo.webp" style="height: 65px; width: auto; display: block; margin: auto;" />
       </div>
     </div>
   </q-header>
