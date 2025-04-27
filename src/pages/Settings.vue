@@ -54,7 +54,7 @@ const milestones: { text: string, done: boolean }[] = [
     done: true
   }, {
     text: 'Weisungen automatisch von den Veranstaltungswebseiten abgreifen. (10.04.2025)',
-    done: false
+    done: true
   }, {
     text: 'Informationen aus den Weisungen mit KI als strukturierte Daten übersichtlich zur Verfügung stellen.',
     done: false
