@@ -1,5 +1,5 @@
 <template>
-  <!-- loadin animation -->
+  <!-- loading animation -->
   <div v-if="props.loading" class="row">
     <div v-for="i in [...Array(10).keys()]" :key="i" class="col-12 q-pb-md">
       <q-item>
@@ -77,6 +77,9 @@
             <!-- text body -->
             <div class="row justify-between items-center">
               <div class="col-auto">
+                <span v-if="!!race?.terrain" class="q-mr-xs">
+                  <q-icon :name="getTerrainIcon(race.terrain as RaceTerrain)" size="xs" style="margin-top: -4px;" />
+                </span>
                 {{ race.city || race.mapName || 'vakant' }} {{ race.region ?
                   `(${race.region})`
                   :
@@ -103,9 +106,12 @@ import { Race } from 'src/types/DirectusTypes'
 import { formatDate } from 'src/utils/DateUtils'
 import { useSyncCenter } from 'src/stores/syncCenter'
 import { useRace } from 'src/composables/useRace'
+import { useRaceTerrain } from 'src/composables/useRaceTerrain'
+import { RaceTerrain } from 'src/classes/RaceFilter'
 
 const syncCenter = useSyncCenter()
 const raceCompose = useRace()
+const {getTerrainIcon} = useRaceTerrain()
 
 const props = withDefaults(defineProps<{
   races: Race[]

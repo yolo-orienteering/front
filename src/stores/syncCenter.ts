@@ -112,7 +112,6 @@ export const useSyncCenter = defineStore('syncCenter', () => {
     user,
     filter,
     userIdentifier,
-
     myDepartures
   }
 })

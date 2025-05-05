@@ -25,6 +25,33 @@
       </q-chip>
     </div>
 
+    <!-- terrain -->
+    <div class="col-auto">
+      <q-chip class="q-ml-none" color="primary" dense size="xl" outline
+      :selected="!!filter.terrain" :class="filter.terrain ? 'bg-primary text-white' : 'bg-white'" :removable="!!filter.terrain"
+      @remove="updateFilter({terrain: null})" :icon-selected="getTerrainIcon(filter.terrain)">  
+      
+        <span class="text-body2 ">
+          <q-icon v-if="!filter.terrain" :name="getTerrainIcon(undefined)" size="sm" />
+          {{ getTerrainText(filter.terrain) }}
+        </span>
+
+        <q-menu cover anchor="bottom left" auto-close class="text-no-wrap">
+          <q-list>
+            <q-item clickable @click="updateFilter({terrain: 'urban'})">
+                <q-item-section><p class="q-mb-none"><q-icon :name="getTerrainIcon('urban')"/> {{ getTerrainText('urban') }}</p></q-item-section>
+            </q-item>
+            <q-item clickable @click="updateFilter({terrain: 'forest'})">
+              <q-item-section><p class="q-mb-none"><q-icon :name="getTerrainIcon('forest')"/> {{ getTerrainText('forest') }}</p></q-item-section>
+            </q-item>
+            <q-item clickable @click="updateFilter({terrain: 'mix'})">
+              <q-item-section><p class="q-mb-none"><q-icon :name="getTerrainIcon('mix')"/> {{ getTerrainText('mix') }}</p></q-item-section>
+            </q-item>
+          </q-list>
+        </q-menu>
+      </q-chip>
+    </div>
+
     <!-- previous -->
     <div class="col-auto">
       <q-chip @click="updateFilter({ previousDays: 'add' })" @remove="updateFilter({ previousDays: 'reset' })"
@@ -62,11 +89,14 @@
 import { onMounted, ref } from 'vue'
 import { useSyncCenter } from 'src/stores/syncCenter'
 import { useRegion } from 'src/stores/useRegion'
+import { RaceTerrain } from 'src/classes/RaceFilter'
+import { useRaceTerrain } from 'src/composables/useRaceTerrain'
 
 const { filter } = useSyncCenter()
 const regionStore = useRegion()
+const {getTerrainIcon, getTerrainText} = useRaceTerrain()
 
-withDefaults(
+const props = withDefaults(
   defineProps<{
     loading?: boolean
   }>(),
@@ -100,8 +130,8 @@ function searchEngine() {
 }
 
 function updateFilter(
-  { deadline, geographicalScale, previousDays }:
-    { deadline?: boolean, geographicalScale?: string | null, previousDays?: 'add' | 'reset' }
+  { deadline, geographicalScale, previousDays, terrain }:
+    { deadline?: boolean, geographicalScale?: string | null, previousDays?: 'add' | 'reset', terrain?: RaceTerrain | null }
 ) {
   if (deadline !== undefined) {
     filter.deadline = deadline
@@ -117,6 +147,10 @@ function updateFilter(
     } else if (previousDays === 'add') {
       graduallyIncreasePreviousDays()
     }
+  }
+
+  if (terrain !== undefined) {
+    filter.terrain = terrain || undefined
   }
 
   emits('update:filter')

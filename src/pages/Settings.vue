@@ -56,6 +56,9 @@ const milestones: { text: string, done: boolean }[] = [
     text: 'Weisungen automatisch von den Veranstaltungswebseiten abgreifen. (10.04.2025)',
     done: true
   }, {
+    text: 'Nach Terrain (Urban / Wald) filtern. (05.05.2025)',
+    done: true
+  }, {
     text: 'Informationen aus den Weisungen mit KI als strukturierte Daten übersichtlich zur Verfügung stellen.',
     done: false
   }, {
