@@ -18,16 +18,8 @@
 
 
     <!-- deadline -->
-    <div v-if="race.deadline" class="col-12 q-pt-md">
-      <q-banner v-if="myDeparture" dense rounded class="bg-green text-white">
-        <template #avatar>
-          <q-icon name="change_history" size="sm" />
-        </template>
-        {{ syncCenter.user?.first_name }}, du startest um <b>{{ syncCenter.myDepartures.getFormatedDeparture(race.id)
-          }}</b>
-      </q-banner>
-
-      <q-banner v-else dense rounded class="bg-secondary text-white">
+    <div v-if="race.deadline && new Date(race.deadline) >= new Date()" class="col-12 q-pt-md">
+      <q-banner dense rounded class="bg-secondary text-white">
         <span class="fal fa-bells" />
         Anmeldung erforderlich bis am {{ formatDate(race.deadline, 'dd, DD.MMM YYYY') }}
       </q-banner>
@@ -66,17 +58,25 @@
     </div>
 
     <!-- instruction -->
-    <div v-if="!!race.instruction.length" class="col-12">
+    <div v-if="!!race.instruction.length || myDeparture" class="col-12">
       <q-separator class="q-my-lg" />
 
       <div class="text-h5">Weisungen</div>
 
-      <div class="row q-col-gutter-sm q-pl-sm q-pt-md">
+      <q-banner v-if="myDeparture" dense rounded class="bg-black text-white q-mt-md">
+        <template #avatar>
+          <q-icon name="change_history" size="sm" />
+        </template>
+        {{ syncCenter.user?.first_name }}, du startest um <b>{{ syncCenter.myDepartures.getFormatedDeparture(race.id)
+          }}</b>
+      </q-banner>
+
+      <div v-if="getInstruction(race)?.summaryAI" class="row q-col-gutter-sm q-pl-sm q-pt-md">
         <p class="col-12" style="white-space: pre-wrap;">
-          {{ (race?.instruction as RaceInstruction[])?.[0]?.summaryAI }}
+          {{ getInstruction(race)?.summaryAI }}
         </p>
 
-        <b>Die obigen Weisungen wurden automatisch von einer KI erstellt. Alle Angaben ohne Gewähr.</b>
+        <b v-if="getInstruction(race)?.summaryAI">Die obigen Weisungen wurden automatisch von einer KI erstellt. Alle Angaben ohne Gewähr.</b>
 
         <!-- Instruction PDF -->
         <div v-if="raceCompose.composeLink({ race, linkType: 'instruction' })" class="col-12 q-mt-md">
@@ -178,4 +178,8 @@ onMounted(async () => {
 
 const myDeparture = computed<UserDeparture | undefined>(() => syncCenter.myDepartures.getDepartureFor(race.value?.id))
 const raceCategory = computed<RaceCategory | undefined | null>(() => myDeparture.value?.raceCategory as RaceCategory | null | undefined)
+
+function getInstruction (race: Race) {
+  return (race?.instruction as RaceInstruction[])?.[0]
+}
 </script>
