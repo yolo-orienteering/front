@@ -59,7 +59,7 @@ const milestones: { text: string, done: boolean }[] = [
     text: 'Nach Terrain (Urban / Wald) filtern. (05.05.2025)',
     done: true
   }, {
-    text: 'Informationen aus den Weisungen mit KI als strukturierte Daten übersichtlich zur Verfügung stellen.',
+    text: 'Informationen aus den Weisungen mit KI als strukturierte Daten übersichtlich zur Verfügung stellen. (06.05.2025)',
     done: true
   }, {
     text: 'Einbindung von relevanten OL-News',
