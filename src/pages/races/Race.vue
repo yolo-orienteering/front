@@ -65,6 +65,29 @@
       </div>
     </div>
 
+    <!-- instruction -->
+    <div v-if="!!race.instruction.length" class="col-12">
+      <q-separator class="q-my-lg" />
+
+      <div class="text-h5">Weisungen</div>
+
+      <div class="row q-col-gutter-sm q-pl-sm q-pt-md">
+        <p class="col-12" style="white-space: pre-wrap;">
+          {{ (race?.instruction as RaceInstruction[])?.[0]?.summaryAI }}
+        </p>
+
+        <b>Die obigen Weisungen wurden automatisch von einer KI erstellt. Alle Angaben ohne Gewähr.</b>
+
+        <!-- Instruction PDF -->
+        <div v-if="raceCompose.composeLink({ race, linkType: 'instruction' })" class="col-12 q-mt-md">
+            <q-btn target="_blank" color="black" :href="raceCompose.composeLink({ race, linkType: 'instruction' })">
+              <q-icon name="signpost" class="q-mr-sm" />
+              Weisungen
+            </q-btn>
+          </div>
+      </div>
+    </div>
+
     <!-- links -->
     <div class="col-12">
       <q-separator class="q-my-lg" />
@@ -72,14 +95,6 @@
       <div class="text-h5">Links</div>
 
       <div class="row q-col-gutter-sm q-pl-sm q-pt-md">
-        <!-- Instruction PDF -->
-        <div v-if="race.instructionLink" class="col-auto">
-          <q-btn target="_blank" color="black" :href="raceCompose.composeLink({ race, linkType: 'instruction' })">
-            <q-icon name="signpost" class="q-mr-sm" />
-            Weisungen
-          </q-btn>
-        </div>
-
         <!-- Ausschreibung -->
         <div class="col-auto">
           <q-btn v-if="race.publicationLink" outline :href="raceCompose.composeLink({ race, linkType: 'publication' })"
@@ -136,7 +151,7 @@
 import { ref, onMounted, computed } from 'vue'
 import { useRoute } from 'vue-router'
 import SbbTimetable from 'components/publicTransport/switzerland/SbbTimetable.vue'
-import { Race, RaceCategory, UserDeparture } from 'src/types/DirectusTypes'
+import { Race, RaceCategory, RaceInstruction, UserDeparture } from 'src/types/DirectusTypes'
 import { useApi } from 'src/stores/useApi'
 import { readItem } from '@directus/sdk'
 import { formatDate } from 'src/utils/DateUtils'
@@ -154,7 +169,11 @@ const race = ref<Race | null>(null)
 onMounted(async () => {
   const raceId: string = route.params.id as string
 
-  race.value = await directus.request<Race>(readItem('Race', raceId))
+  race.value = await directus.request<Race>(readItem('Race', raceId, {
+    fields: ['*', {
+      instruction: ['*']
+    }]
+  }))
 })
 
 const myDeparture = computed<UserDeparture | undefined>(() => syncCenter.myDepartures.getDepartureFor(race.value?.id))

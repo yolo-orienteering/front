@@ -60,7 +60,7 @@ const milestones: { text: string, done: boolean }[] = [
     done: true
   }, {
     text: 'Informationen aus den Weisungen mit KI als strukturierte Daten übersichtlich zur Verfügung stellen.',
-    done: false
+    done: true
   }, {
     text: 'Einbindung von relevanten OL-News',
     done: false

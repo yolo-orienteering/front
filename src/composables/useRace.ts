@@ -1,5 +1,5 @@
 import { useSyncCenter } from 'src/stores/syncCenter'
-import { Race } from 'src/types/DirectusTypes'
+import { Race, RaceInstruction } from 'src/types/DirectusTypes'
 
 type RaceLinkType = 'event' | 'publication' | 'ranking' | 'inscription' | 'liveResult' | 'instruction'
 
@@ -8,6 +8,7 @@ export function useRace () {
 
   function composeLink ({race, linkType}: {race: Race, linkType: RaceLinkType}): string | undefined {
     let linkToOpen: string | undefined | null = undefined
+    const raceInstruction = (race.instruction as RaceInstruction[])?.[0]
     switch (linkType) {
       case 'event':
         linkToOpen = race.eventLink
@@ -25,7 +26,7 @@ export function useRace () {
         linkToOpen = race.liveResultLink
         break
       case 'instruction':
-        linkToOpen = race.instructionLink
+        linkToOpen = raceInstruction?.linkOverwritten || raceInstruction?.linkCrawled
         break
       default:
         break

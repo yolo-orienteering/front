@@ -66,7 +66,7 @@
 
 <script setup lang="ts">
 import { onMounted, reactive } from 'vue'
-import type { Race } from '../../../types/DirectusTypes'
+import type { Race, RaceInstruction } from '../../../types/DirectusTypes'
 import { formatDate } from 'src/utils/DateUtils'
 import { useSyncCenter } from 'src/stores/syncCenter'
 
@@ -89,9 +89,11 @@ onMounted(() => {
   autoFillForm()
 })
 
+const publicTransportStation = (props.race?.instruction as RaceInstruction[])?.[0]?.publicTransportAI || props.race?.city
+
 function autoFillForm() {
-  if (props.race?.city) {
-    sbbSearchParams.to = props.race.city
+  if (publicTransportStation) {
+    sbbSearchParams.to = publicTransportStation
   }
   if (props.race?.date) {
     sbbSearchParams.date = formatDate(props.race.date, 'DD.MM.YYYY')
