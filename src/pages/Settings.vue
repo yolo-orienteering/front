@@ -62,6 +62,9 @@ const milestones: { text: string, done: boolean }[] = [
     text: 'Informationen aus den Weisungen mit KI als strukturierte Daten übersichtlich zur Verfügung stellen. (06.05.2025)',
     done: true
   }, {
+    text: 'Startlisten anzeigen',
+    done: true
+  }, {
     text: 'Einbindung von relevanten OL-News',
     done: false
   }, {

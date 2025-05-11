@@ -4,10 +4,12 @@ import { useSyncCenter } from 'src/stores/syncCenter'
 import { useApi } from 'src/stores/useApi'
 import { Race, RaceCategory, UserDeparture } from 'src/types/DirectusTypes'
 import { onMounted, ref, watch } from 'vue'
+import { useDeparture } from './useDeparture'
 
 export function useMyDepartures () {
   const {directus} = useApi()
   const syncCenter = useSyncCenter()
+  const {formatDepartureTime} = useDeparture()
 
   const myDepartures = ref<UserDeparture[]>([])
   const lastUserIdentifier = ref<string | false>(syncCenter.userIdentifier)
@@ -79,14 +81,9 @@ export function useMyDepartures () {
       return
     }
   
-    const startTimeInMinutes = departure.startTimeInMinutes
-    if (!startTimeInMinutes) {
-      return
-    }
-  
-    const hours = Math.floor(startTimeInMinutes / 60).toString().padStart(2, '0')
-    const minutes = (startTimeInMinutes % 60).toString().padStart(2, '0')
-    return `${hours}:${minutes}, ${(departure.raceCategory as RaceCategory).name}`
+    const departureTime = formatDepartureTime(departure.startTimeInMinutes)
+    
+    return `${departureTime}, ${(departure.raceCategory as RaceCategory).name}`
   }
 
   function getDepartureFor (raceId: string | null | undefined): UserDeparture | undefined {

@@ -57,19 +57,26 @@
       </div>
     </div>
 
-    <!-- instruction -->
+    <!-- instruction & departure time -->
     <div v-if="!!race.instruction.length || myDeparture" class="col-12">
       <q-separator class="q-my-lg" />
 
       <div class="text-h5">Weisungen</div>
 
-      <q-banner v-if="myDeparture" dense rounded class="bg-black text-white q-mt-md">
-        <template #avatar>
-          <q-icon name="change_history" size="sm" />
-        </template>
-        {{ syncCenter.user?.first_name }}, du startest um <b>{{ syncCenter.myDepartures.getFormatedDeparture(race.id)
-          }}</b>
-      </q-banner>
+      <router-link
+        v-if="myDeparture"
+        style="color: unset;"
+        :to="{name: 'departures-by-category', params: {id: (myDeparture.raceCategory as UserDeparture).id}}"
+      >
+        <q-banner dense rounded class="bg-black text-white q-mt-md">
+          <template #avatar>
+            <q-icon name="change_history" size="sm" />
+          </template>
+          {{ syncCenter.user?.first_name }}, du startest um
+            <b><u>{{ syncCenter.myDepartures.getFormatedDeparture(race.id)}}</u> &nbsp; <q-icon name="open_in_new" /> 
+            </b>
+        </q-banner>
+      </router-link>
 
       <div v-if="getInstruction(race)?.summaryAI" class="row q-col-gutter-sm q-pl-sm q-pt-md">
         <p class="col-12" style="white-space: pre-wrap;">

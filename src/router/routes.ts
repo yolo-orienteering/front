@@ -34,6 +34,12 @@ const routes: RouteRecordRaw[] = [
         path: 'privacy-policy',
         component: () => import('pages/PrivacyPolicy.vue'),
         props: true
+      },
+      {
+        name: 'departures-by-category',
+        path: 'departures/cateogry/:id',
+        component: () => import('pages/departures/DeparturesByCategory.vue'),
+        props: true
       }
     ]
   },
