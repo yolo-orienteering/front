@@ -6,7 +6,7 @@
     <!-- content -->
     <q-page-container>
       <q-page padding>
-        <router-view class="animate-up" />
+        <router-view :key="$route.fullPath" class="animate-up" />
       </q-page>
     </q-page-container>
 

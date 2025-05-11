@@ -62,8 +62,8 @@ const milestones: { text: string, done: boolean }[] = [
     text: 'Informationen aus den Weisungen mit KI als strukturierte Daten übersichtlich zur Verfügung stellen. (06.05.2025)',
     done: true
   }, {
-    text: 'Startlisten anzeigen',
-    done: true
+    text: 'Startlisten anzeigen: auch für nicht Angemeldete / suche nach Namen / zeige alle Kategorien / merke Startzeiten anderer Läufer:innen',
+    done: false
   }, {
     text: 'Einbindung von relevanten OL-News',
     done: false

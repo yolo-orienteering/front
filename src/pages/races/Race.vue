@@ -66,7 +66,13 @@
       <router-link
         v-if="myDeparture"
         style="color: unset;"
-        :to="{name: 'departures-by-category', params: {id: (myDeparture.raceCategory as UserDeparture).id}}"
+        :to="{
+          name: 'departures-by-category',
+          params: {
+            raceId: race.id,
+            raceCategoryId: (myDeparture.raceCategory as UserDeparture).id
+          }
+        }"
       >
         <q-banner dense rounded class="bg-black text-white q-mt-md">
           <template #avatar>
@@ -83,7 +89,7 @@
           {{ getInstruction(race)?.summaryAI }}
         </p>
 
-        <b v-if="getInstruction(race)?.summaryAI">Die obigen Weisungen wurden automatisch von einer KI erstellt. Alle Angaben ohne Gewähr.</b>
+        <b v-if="getInstruction(race)?.summaryAI">Die Weisungen wurden von einer KI zusammengefasst. Angaben ohne Gewähr.</b>
 
         <!-- Instruction PDF -->
         <div v-if="raceCompose.composeLink({ race, linkType: 'instruction' })" class="col-12 q-mt-md">

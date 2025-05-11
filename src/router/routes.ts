@@ -37,7 +37,7 @@ const routes: RouteRecordRaw[] = [
       },
       {
         name: 'departures-by-category',
-        path: 'departures/cateogry/:id',
+        path: 'race/:raceId/departures/cateogry/:raceCategoryId',
         component: () => import('pages/departures/DeparturesByCategory.vue'),
         props: true
       }

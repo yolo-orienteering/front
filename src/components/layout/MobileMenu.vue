@@ -5,10 +5,7 @@
     <!-- back button -->
     <div v-if="showBackButton" class="row justify-center border-bottom-primary">
       <div class="col-auto q-py-sm">
-        <q-btn size="md" outline rounded @click="$router.go(-1)" color="primary">
-          <span class="fal fa-chevron-left q-mr-xs" />
-          Zurück
-        </q-btn>
+        <back-btn/>
       </div>
     </div>
     <!-- menu entries -->
@@ -28,6 +25,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
+import BackBtn from '../helper/BackBtn.vue'
 
 interface IMenuEntry {
   name: string,
@@ -61,7 +59,8 @@ router.afterEach((to) => {
   const insideMenuEntries: boolean = !!menuEntries.value.find((menuEntry: IMenuEntry) => {
     return menuEntry.routeName === to.name
   })
-  if (!insideMenuEntries) {
+  const isDeparturesByCategory = route.name === 'departures-by-category'
+  if (!insideMenuEntries && !isDeparturesByCategory) {
     showBackButton.value = true
   } else {
     showBackButton.value = false
