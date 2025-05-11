@@ -158,7 +158,7 @@ async function getRace (): Promise<Race | undefined> {
 }
 
 async function updateCategoryFilter (newCategory: RaceCategory): Promise<void> {
-  await router.push({name: 'departures-by-category', params: {
+  await router.replace({name: 'departures-by-category', params: {
     raceId: params.raceId,
     raceCategoryId: newCategory.id
   }})

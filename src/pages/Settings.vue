@@ -65,6 +65,9 @@ const milestones: { text: string, done: boolean }[] = [
     text: 'Startlisten anzeigen: auch für nicht Angemeldete / suche nach Namen / zeige alle Kategorien / merke Startzeiten anderer Läufer:innen',
     done: false
   }, {
+    text: 'Teile-Button für Läufe > SSR',
+    done: false
+  }, {
     text: 'Einbindung von relevanten OL-News',
     done: false
   }, {
