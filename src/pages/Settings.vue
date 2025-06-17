@@ -1,5 +1,5 @@
 <template>
-  <div class="q-pt-xl">
+  <div class="q-pt-md">
     <!-- personal data -->
     <div class="row">
       <div class="col-12 text-h5">
@@ -10,25 +10,67 @@
       </div>
     </div>
 
-    <!-- roadmap -->
-    <div class="row q-mt-xl">
+    <!-- Feedback -->
+    <div class="row q-my-xl">
       <div class="col-12 text-h5">
-        Roadmap
+        Feedback
       </div>
-      <div class="col-12 q-px-sm q-pt-sm text-body1">
-        <div v-for="(milestone, milestoneIndex) in milestones" :key="milestoneIndex" class="q-pb-sm">
-          <q-icon :name="milestone.done ? 'check_box' : 'check_box_outline_blank'" size="sm" class="q-mr-xs" /> {{
-            milestone.text }}
-        </div>
+      <p class="col-12 q-pt-sm q-px-sm">
+        Hast Du Ideen oder Rückmeldungen zu dieser App? Möchtest Du den Betrieb, den Vertrieb oder die Entwicklung unterstützen, gar mitprogrammieren?
+        <br/>
+        Was immer es ist. Schreib mir eine E-Mail oder kontaktiere mich via Telefonnummer.
+      </p>
+      <div class="col-12 text-center">
+        <q-btn href="mailto:scheurer.michael@pm.me" target="_blank" flat size="md"><q-icon name="mail" class="q-mr-sm" />
+          <span style="text-transform: lowercase;">scheurer.michael@pm.me</span></q-btn>
+      </div>
+      <div class="col-12 text-center">
+        <q-btn href="tel:+41793456052" target="_blank" flat size="md"><q-icon name="phone" class="q-mr-sm" />+41793456052</q-btn>
       </div>
     </div>
 
+    <!-- Roadmap -->
+    <div class="row q-my-xl">
+      <div class="col-12 text-h5">
+        Wunschliste
+      </div>
+      <div class="col-12 q-pt-sm q-px-sm">
+        <p>
+          Vielleicht steht deine Idee bereits auf unserer Wunschliste. Was wir bereits umgesetzt haben und gerne noch umsetzen
+          möchten, findest Du in der Roadmap.
+        </p>
+      </div>
+      <div class="col-12 text-center">
+        <q-btn :to="{name: 'roadmap'}" flat size="md"><q-icon name="lightbulb" class="q-mr-sm" /> Roadmap öffnen</q-btn>
+      </div>
+    </div>
+
+    <!-- Open Source -->
+    <div class="row q-my-xl">
+      <div class="col-12 text-h5">
+        Open Source
+      </div>
+      <p class="col-12 q-pt-sm q-px-sm">
+        Der Code von o-mate ist komplett offen. Hast Du Lust, mitzuprogrammieren? Nimm Kontakt mit uns auf oder
+        erstelle direkt einen Pullrequest auf Github.
+      </p>
+      <div class="col-12 text-center">
+        <q-btn href="https://github.com/orgs/yolo-orienteering/repositories" target="_blank" flat size="md">
+          <q-icon name="code" class="q-mr-sm" /> Code auf Github ansehen
+        </q-btn>
+      </div>
+    </div>
+
+    <!-- privacy policy -->
     <div class="row q-my-xl">
       <div class="col-12 text-h5">
         Datenschutz
       </div>
-      <div class="col-12 q-pt-sm">
-        <q-btn :to="{ name: 'privacy-policy' }" outline>Datenschutzerklärung</q-btn>
+      <p>Wir legen grossen Wert darauf, dass der Umgang mit Personendaten transparent ist.</p>
+      <div class="col-12 text-center">
+        <q-btn :to="{ name: 'privacy-policy' }" flat size="md">
+          <q-icon name="security" class="q-mr-sm" /> Datenschutzerklärung
+        </q-btn>
       </div>
     </div>
   </div>
@@ -37,72 +79,4 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import UserForm from 'components/user/UserForm.vue'
-const deadlineAlert = ref('all')
-
-const milestones: { text: string, done: boolean }[] = [
-  {
-    text: 'Zeige deine Startzeit automatisch an, wenn Du an einem Lauf angemeldet bist. (01.04.2025)',
-    done: true
-  }, {
-    text: 'Android App (05.04.2025)',
-    done: true
-  }, {
-    text: 'IOS App (07.04.2025)',
-    done: true
-  }, {
-    text: 'Ältere OLs anzeigen (07.04.2025)',
-    done: true
-  }, {
-    text: 'Weisungen automatisch von den Veranstaltungswebseiten abgreifen. (10.04.2025)',
-    done: true
-  }, {
-    text: 'Nach Terrain (Urban / Wald) filtern. (05.05.2025)',
-    done: true
-  }, {
-    text: 'Informationen aus den Weisungen mit KI als strukturierte Daten übersichtlich zur Verfügung stellen. (06.05.2025)',
-    done: true
-  }, {
-    text: 'Startlisten anzeigen: auch für nicht Angemeldete / suche nach Namen / zeige alle Kategorien / merke Startzeiten anderer Läufer:innen',
-    done: false
-  }, {
-    text: 'Teile-Button für Läufe > SSR',
-    done: false
-  }, {
-    text: 'Einbindung von relevanten OL-News',
-    done: false
-  }, {
-    text: 'Social-App-Elemente (Fahrgemeinschaften, Posts, Following, Freundeskreise usw.)',
-    done: false
-  }, {
-    text: 'Front-end auf Nuxtjs/Vuetify umschreiben für SSR-Untersützung und SEO-Optimierung.',
-    done: false
-  }, {
-    text: 'Desktop-Version programmieren.',
-    done: false
-  }, {
-    text: 'Übersetze die App in andere Sprachen.',
-    done: false
-  }, {
-    text: 'Resultate in der App darstellen.',
-    done: false
-  }, {
-    text: 'Synchronisiere die vorgemerkten Läufe automatisch mit Kalender.',
-    done: false
-  }, {
-    text: 'Plane deine Anreise mit einer integrierten Karte und dem genauem Standort des OLs.',
-    done: false
-  }, {
-    text: 'Erhalte Erinnerungen bei Anmeldeschlüssen.',
-    done: false
-  }, {
-    text: 'Bilde Freundeskreise und sehe, welche Freunde an welchen OLs teilnehmen.',
-    done: false
-  }, {
-    text: 'Bilde Fahrgemeinschaften an OLs.',
-    done: false
-  }, {
-    text: 'Suche nach internationalen OLs.',
-    done: false
-  }
-]
 </script>

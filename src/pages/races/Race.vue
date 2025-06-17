@@ -1,3 +1,41 @@
+<script setup lang="ts">
+import { ref, onMounted, computed } from 'vue'
+import { useRoute } from 'vue-router'
+import SbbTimetable from 'components/publicTransport/switzerland/SbbTimetable.vue'
+import { Race, RaceCategory, RaceInstruction, UserDeparture } from 'src/types/DirectusTypes'
+import { useApi } from 'src/stores/useApi'
+import { readItem } from '@directus/sdk'
+import { formatDate } from 'src/utils/DateUtils'
+import { useRace } from 'src/composables/useRace'
+import { useSyncCenter } from 'src/stores/syncCenter'
+
+const route = useRoute()
+const { directus } = useApi()
+const raceCompose = useRace()
+const syncCenter = useSyncCenter()
+
+const race = ref<Race | null>(null)
+const expandedInstructions = ref<boolean>(false)
+
+// load race
+onMounted(async () => {
+  const raceId: string = route.params.id as string
+
+  race.value = await directus.request<Race>(readItem('Race', raceId, {
+    fields: ['*', {
+      instruction: ['*']
+    }]
+  }))
+})
+
+const myDeparture = computed<UserDeparture | undefined>(() => syncCenter.myDepartures.getDepartureFor(race.value?.id))
+const raceCategory = computed<RaceCategory | undefined | null>(() => myDeparture.value?.raceCategory as RaceCategory | null | undefined)
+
+function getInstruction (race: Race) {
+  return (race?.instruction as RaceInstruction[])?.[0]
+}
+</script>
+
 <template>
   <div class="row items-center" v-if="race">
     <!-- title and favorite -->
@@ -9,8 +47,8 @@
         <q-space />
         <div class="col-2 text-right">
           <q-btn round color="primary" :outline="!syncCenter.myRaces.find(myRace => myRace.id === race?.id)" dense
-            @click="raceCompose.addOrRemoveRace(race)">
-            <q-icon name="star_outline" />
+                 @click="raceCompose.addOrRemoveRace(race)">
+            <q-icon name="bookmark_outline" />
           </q-btn>
         </div>
       </div>
@@ -45,9 +83,9 @@
         <div class="col-12 q-pt-xs">
           <q-icon name="location_on" class="q-mr-xs" />
           {{ race.city || race.mapName || 'vakant' }} {{ race.region ? `(${race.region}` : '' }}<span
-            class="text-capitalize">{{ race.country ? `,
+          class="text-capitalize">{{ race.country ? `,
             ${race.country})` :
-              ')' }}</span>
+          ')' }}</span>
         </div>
         <!-- map name -->
         <div class="col-12 q-pt-xs">
@@ -57,47 +95,58 @@
       </div>
     </div>
 
+
+    <!-- my departure -->
+    <div v-if="myDeparture" class="col-12">
+      <q-separator class="q-my-lg" />
+
+      <div class="text-h5">Deine Startzeit</div>
+
+       <div class="q-mt-md q-pl-sm text-body1">
+         {{ syncCenter.user?.first_name }}, du startest um
+         <router-link
+           v-if="myDeparture"
+           class="q-mt-md"
+           style="color: unset;"
+           :to="{
+            name: 'departures-by-category',
+            params: {
+              raceId: race.id,
+              raceCategoryId: (myDeparture.raceCategory as UserDeparture).id
+            }
+          }"
+         >
+           <b><u>{{ syncCenter.myDepartures.getFormatedDeparture(race.id)}}</u></b>
+         </router-link>
+       </div>
+    </div>
+
     <!-- instruction & departure time -->
     <div v-if="!!race.instruction.length || myDeparture" class="col-12">
       <q-separator class="q-my-lg" />
 
       <div class="text-h5">Weisungen</div>
 
-      <router-link
-        v-if="myDeparture"
-        style="color: unset;"
-        :to="{
-          name: 'departures-by-category',
-          params: {
-            raceId: race.id,
-            raceCategoryId: (myDeparture.raceCategory as UserDeparture).id
-          }
-        }"
-      >
-        <q-banner dense rounded class="bg-black text-white q-mt-md">
-          <template #avatar>
-            <q-icon name="change_history" size="sm" />
-          </template>
-          {{ syncCenter.user?.first_name }}, du startest um
-            <b><u>{{ syncCenter.myDepartures.getFormatedDeparture(race.id)}}</u> &nbsp; <q-icon name="open_in_new" /> 
-            </b>
-        </q-banner>
-      </router-link>
+      <div v-if="getInstruction(race)?.summaryAI" class="row text-body1 q-col-gutter-sm q-pl-sm q-pt-md">
+        <div class="col-12" :class="{'text-fadeout': !expandedInstructions}" @click="expandedInstructions = true">
+          <p style="white-space: pre-wrap;">
+            {{ getInstruction(race)?.summaryAI }}
+          </p>
 
-      <div v-if="getInstruction(race)?.summaryAI" class="row q-col-gutter-sm q-pl-sm q-pt-md">
-        <p class="col-12" style="white-space: pre-wrap;">
-          {{ getInstruction(race)?.summaryAI }}
-        </p>
-
-        <b v-if="getInstruction(race)?.summaryAI">Die Weisungen wurden von einer KI zusammengefasst. Angaben ohne Gewähr.</b>
+          <b v-if="getInstruction(race)?.summaryAI">Die Weisungen wurden von einer KI zusammengefasst. Angaben ohne Gewähr.</b>
+        </div>
+        <div class="col-12 text-center q-pt-none" @click="expandedInstructions = !expandedInstructions">
+          <q-btn flat round><q-icon :name="expandedInstructions ? 'keyboard_arrow_up' : 'keyboard_arrow_down'" size="xl"/>
+          </q-btn>
+        </div>
 
         <!-- Instruction PDF -->
-        <div v-if="raceCompose.composeLink({ race, linkType: 'instruction' })" class="col-12 q-mt-md">
-            <q-btn target="_blank" color="black" :href="raceCompose.composeLink({ race, linkType: 'instruction' })">
-              <q-icon name="signpost" class="q-mr-sm" />
-              Weisungen
-            </q-btn>
-          </div>
+        <div v-if="raceCompose.composeLink({ race, linkType: 'instruction' })" class="col-12 text-center q-mt-md">
+          <q-btn target="_blank" color="black" outline :href="raceCompose.composeLink({ race, linkType: 'instruction' })">
+            <q-icon name="signpost" class="q-mr-sm" />
+            Original-Weisungen lesen
+          </q-btn>
+        </div>
       </div>
     </div>
 
@@ -111,7 +160,7 @@
         <!-- Ausschreibung -->
         <div class="col-auto">
           <q-btn v-if="race.publicationLink" outline :href="raceCompose.composeLink({ race, linkType: 'publication' })"
-            target="_blank">
+                 target="_blank">
             <q-icon name="picture_as_pdf" class="q-mr-sm" />
             Ausschreibung
           </q-btn>
@@ -160,39 +209,13 @@
   </div>
 </template>
 
-<script setup lang="ts">
-import { ref, onMounted, computed } from 'vue'
-import { useRoute } from 'vue-router'
-import SbbTimetable from 'components/publicTransport/switzerland/SbbTimetable.vue'
-import { Race, RaceCategory, RaceInstruction, UserDeparture } from 'src/types/DirectusTypes'
-import { useApi } from 'src/stores/useApi'
-import { readItem } from '@directus/sdk'
-import { formatDate } from 'src/utils/DateUtils'
-import { useRace } from 'src/composables/useRace'
-import { useSyncCenter } from 'src/stores/syncCenter'
 
-const route = useRoute()
-const { directus } = useApi()
-const raceCompose = useRace()
-const syncCenter = useSyncCenter()
-
-const race = ref<Race | null>(null)
-
-// load race
-onMounted(async () => {
-  const raceId: string = route.params.id as string
-
-  race.value = await directus.request<Race>(readItem('Race', raceId, {
-    fields: ['*', {
-      instruction: ['*']
-    }]
-  }))
-})
-
-const myDeparture = computed<UserDeparture | undefined>(() => syncCenter.myDepartures.getDepartureFor(race.value?.id))
-const raceCategory = computed<RaceCategory | undefined | null>(() => myDeparture.value?.raceCategory as RaceCategory | null | undefined)
-
-function getInstruction (race: Race) {
-  return (race?.instruction as RaceInstruction[])?.[0]
+<style lang="scss">
+.text-fadeout {
+  max-height: 100px;
+  white-space: nowrap;
+  overflow: hidden;
+  position: relative;
+  mask-image: linear-gradient(to bottom, black 10%, transparent 100%);
 }
-</script>
+</style>

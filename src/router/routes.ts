@@ -40,6 +40,12 @@ const routes: RouteRecordRaw[] = [
         path: 'race/:raceId/departures/cateogry/:raceCategoryId',
         component: () => import('pages/departures/DeparturesByCategory.vue'),
         props: true
+      },
+      {
+        name: 'roadmap',
+        path: '/roadmap',
+        component: () => import('pages/Roadmap.vue'),
+        props: true
       }
     ]
   },

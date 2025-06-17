@@ -1,105 +1,3 @@
-<template>
-  <!-- loading animation -->
-  <div v-if="props.loading" class="row">
-    <div v-for="i in [...Array(10).keys()]" :key="i" class="col-12 q-pb-md">
-      <q-item>
-        <q-item-section avatar>
-          <q-skeleton type="QAvatar" />
-        </q-item-section>
-
-        <q-item-section>
-          <q-item-label>
-            <q-skeleton type="text" />
-          </q-item-label>
-          <q-item-label caption>
-            <q-skeleton type="text" width="65%" />
-          </q-item-label>
-        </q-item-section>
-      </q-item>
-    </div>
-  </div>
-
-  <!-- races list -->
-  <div v-else class="row justify-center">
-    <div class="col-12">
-      <q-timeline layout="dense">
-        <template v-for="(race, raceIndex) in races" :key="race.id">
-          <!-- monthly delimiter -->
-          <q-timeline-entry v-if="monthChangeInArray(race.id)" heading>
-            <div class="row">
-              <!-- month name -->
-              <div class="col-8">
-                {{ getMonthlyDelimiter(syncCenter.filter.deadline ? race.deadline! : race.date!) }}
-              </div>
-            </div>
-          </q-timeline-entry>
-
-          <!-- races -->
-          <q-timeline-entry :title="race.name!" @click="$router.push({ name: 'race', params: { id: race.id } })">
-            <!-- date & deadline -->
-            <template v-slot:subtitle>
-              <div class="row items-center">
-                <div class="col-6">
-                  {{ formatDate(race.date!, 'dd, DD.MM yyyy') }}
-                </div>
-                <!-- deadline -->
-                <div v-if="race.deadline" class="col-6 text-right">
-                  <q-btn v-if="shouldAddUser(race)" rounded unelevated size="sm" color="secondary" href="#/settings">
-                    Deine Startzeit
-                  </q-btn>
-
-                  <q-chip color="secondary" size="md" unelevated rounded
-                    v-else-if="syncCenter.myDepartures.getDepartureFor(race.id)">
-                    {{ syncCenter.myDepartures.getFormatedDeparture(race.id) }}
-                  </q-chip>
-
-                  <q-chip v-else color="secondary" dense :outline="!syncCenter.filter.deadline"
-                    :class="[{ 'text-strike': new Date() > new Date(race.deadline!) }]">
-                    {{ formatDate(race.deadline!, 'dd, DD.MMM') }}
-                  </q-chip>
-                </div>
-              </div>
-            </template>
-            <!-- title & favorites -->
-            <template v-slot:title>
-              <div class="row items-center">
-                <div class="col-10">
-                  {{ race.name }}
-                </div>
-                <div class="col-2 text-right">
-                  <q-btn round color="primary" :outline="!syncCenter.myRaces.find(myRace => myRace.id === race.id)"
-                    dense @click.stop="raceCompose.addOrRemoveRace(race)">
-                    <q-icon name="star_outline" />
-                  </q-btn>
-                </div>
-              </div>
-            </template>
-            <!-- text body -->
-            <div class="row justify-between items-center">
-              <div class="col-auto">
-                <span v-if="!!race?.terrain" class="q-mr-xs">
-                  <q-icon :name="getTerrainIcon(race.terrain as RaceTerrain)" size="xs" style="margin-top: -4px;" />
-                </span>
-                {{ race.city || race.mapName || 'vakant' }} {{ race.region ?
-                  `(${race.region})`
-                  :
-                  '' }}
-              </div>
-            </div>
-          </q-timeline-entry>
-        </template>
-      </q-timeline>
-    </div>
-
-    <!-- pagination -->
-    <div v-if="!hideLoadMore" class="col-12 text-center q-pb-lg">
-      <q-btn outline @click="loadMore()">
-        Mehr Läufe laden
-      </q-btn>
-    </div>
-  </div>
-</template>
-
 <script setup lang="ts">
 import moment from 'moment'
 import { Race } from 'src/types/DirectusTypes'
@@ -163,3 +61,105 @@ function monthChangeInArray(raceId: string, firstMonth: boolean = true): boolean
   return monthOfPreviousRace !== currentMonth
 }
 </script>
+
+<template>
+  <!-- loading animation -->
+  <div v-if="props.loading" class="row">
+    <div v-for="i in [...Array(10).keys()]" :key="i" class="col-12 q-pb-md">
+      <q-item>
+        <q-item-section avatar>
+          <q-skeleton type="QAvatar" />
+        </q-item-section>
+
+        <q-item-section>
+          <q-item-label>
+            <q-skeleton type="text" />
+          </q-item-label>
+          <q-item-label caption>
+            <q-skeleton type="text" width="65%" />
+          </q-item-label>
+        </q-item-section>
+      </q-item>
+    </div>
+  </div>
+
+  <!-- races list -->
+  <div v-else class="row justify-center">
+    <div class="col-12">
+      <q-timeline layout="dense">
+        <template v-for="(race, raceIndex) in races" :key="race.id">
+          <!-- monthly delimiter -->
+          <q-timeline-entry v-if="monthChangeInArray(race.id)" heading>
+            <div class="row">
+              <!-- month name -->
+              <div class="col-8">
+                {{ getMonthlyDelimiter(syncCenter.filter.deadline ? race.deadline! : race.date!) }}
+              </div>
+            </div>
+          </q-timeline-entry>
+
+          <!-- races -->
+          <q-timeline-entry :title="race.name!" @click="$router.push({ name: 'race', params: { id: race.id } })">
+            <!-- date & deadline -->
+            <template v-slot:subtitle>
+              <div class="row items-center">
+                <div class="col-6">
+                  {{ formatDate(race.date!, 'dd, DD.MM yyyy') }}
+                </div>
+                <!-- deadline -->
+                <div v-if="race.deadline" class="col-6 text-right">
+                  <q-btn v-if="shouldAddUser(race)" rounded unelevated size="sm" color="secondary" href="#/settings">
+                    Deine Startzeit
+                  </q-btn>
+
+                  <q-chip color="secondary" size="md" unelevated rounded
+                          v-else-if="syncCenter.myDepartures.getDepartureFor(race.id)">
+                    {{ syncCenter.myDepartures.getFormatedDeparture(race.id) }}
+                  </q-chip>
+
+                  <q-chip v-else color="secondary" dense :outline="!syncCenter.filter.deadline"
+                          :class="[{ 'text-strike': new Date() > new Date(race.deadline!) }]">
+                    {{ formatDate(race.deadline!, 'dd, DD.MMM') }}
+                  </q-chip>
+                </div>
+              </div>
+            </template>
+            <!-- title & favorites -->
+            <template v-slot:title>
+              <div class="row items-center">
+                <div class="col-10">
+                  {{ race.name }}
+                </div>
+                <div class="col-2 text-right">
+                  <q-btn round color="primary" :outline="!syncCenter.myRaces.find(myRace => myRace.id === race.id)"
+                         dense @click.stop="raceCompose.addOrRemoveRace(race)">
+                    <q-icon name="bookmark_outline" />
+                  </q-btn>
+                </div>
+              </div>
+            </template>
+            <!-- text body -->
+            <div class="row justify-between items-center">
+              <div class="col-auto">
+                <span v-if="!!race?.terrain" class="q-mr-xs">
+                  <q-icon :name="getTerrainIcon(race.terrain as RaceTerrain)" size="xs" style="margin-top: -4px;" />
+                </span>
+                {{ race.city || race.mapName || 'vakant' }} {{ race.region ?
+                `(${race.region})`
+                :
+                '' }}
+              </div>
+            </div>
+          </q-timeline-entry>
+        </template>
+      </q-timeline>
+    </div>
+
+    <!-- pagination -->
+    <div v-if="!hideLoadMore" class="col-12 text-center q-pb-lg">
+      <q-btn outline @click="loadMore()">
+        Mehr Läufe laden
+      </q-btn>
+    </div>
+  </div>
+</template>
