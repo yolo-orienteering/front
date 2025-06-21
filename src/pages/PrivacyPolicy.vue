@@ -19,6 +19,7 @@
           <li><span>Cloudflare Pages</span></li>
           <li><span>Cleavr</span></li>
           <li><span>Hetzner</span></li>
+          <li><span>Mailchimp (Newsletter)</span></li>
         </ul>
         <p></p><br>
         <h2>2. Kontaktinformationen</h2>
@@ -198,8 +199,8 @@
           technische Informationen, einschliesslich Ihrer IP-Adresse und Informationen über den von Ihnen genutzten
           Browser, an Cloudflare übermittelt. Diese Daten werden von Cloudflare verwendet, um den Rocket Loader-Dienst
           bereitzustellen und die Performance unserer Website zu verbessern.</p> <br><br>
-        <h3>BrainBox Generatoren</h3> BrainBox Generatoren ist ein Dienst der <a style="color:inherit;"
-          href="https://brainbox.swiss/" rel="nofollow" target="_blank">BrainBox Solutions GmbH</a>, um alle
+        <h3>BrainBox Generatoren</h3> BrainBox Generatoren ist ein Dienst der <a href="https://brainbox.swiss/"
+          rel="nofollow" style="color:inherit;" target="_blank">BrainBox Solutions GmbH</a>, um alle
         datenschutzrelevanten Dienste auf einer Website zu erkennen und unter anderem damit bei der Erstellung der
         Datenschutzerklärung zu helfen. Dabei werden keine personenbezogenen Daten erfasst oder verarbeitet.
       </div>
@@ -218,4 +219,4 @@
 }
 </style>
 
-<script setup lang="ts"></script>
+<script lang="ts" setup></script>

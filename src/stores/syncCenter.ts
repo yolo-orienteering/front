@@ -1,9 +1,9 @@
-import { defineStore } from 'pinia'
+import {defineStore} from 'pinia'
 import {useQuasar} from 'quasar'
 import RaceFilter from 'src/classes/RaceFilter'
-import { useMyDepartures } from 'src/composables/useMyDepartures'
-import { DirectusUsers, Race } from 'src/types/DirectusTypes'
-import { computed, ref, watch } from 'vue'
+import {useMyDepartures} from 'src/composables/useMyDepartures'
+import {DirectusUsers, Race} from 'src/types/DirectusTypes'
+import {computed, ref, watch} from 'vue'
 
 export const useSyncCenter = defineStore('syncCenter', () => {
   // NEW WAY!
@@ -16,7 +16,7 @@ export const useSyncCenter = defineStore('syncCenter', () => {
   const myRaces = ref<Race[]>([])
   const user = ref<Partial<DirectusUsers> | null>(null)
   const filter = ref<RaceFilter>(new RaceFilter())
-  
+
 
   /**
    * DEFINE STORE KEY NAMES
@@ -30,7 +30,7 @@ export const useSyncCenter = defineStore('syncCenter', () => {
   /**
    * INITIAL DATA READING FROM STORE
    */
-  // load data from local store
+  // load data from the local store
   readMyRaces()
   readFilters()
   readUser()
@@ -77,7 +77,6 @@ export const useSyncCenter = defineStore('syncCenter', () => {
    */
 
   const myRacesSorted = computed<Race[]>(() => {
-    
     const fiveDaysAgoMs = new Date(new Date().setDate(new Date().getDate() - 4)).setHours(0, 0, 0, 0)
     return myRaces.value
       .sort((a, b) => {

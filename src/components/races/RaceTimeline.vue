@@ -1,64 +1,83 @@
-<script setup lang="ts">
+<script lang="ts" setup>
 import moment from 'moment'
-import { Race } from 'src/types/DirectusTypes'
-import { formatDate } from 'src/utils/DateUtils'
-import { useSyncCenter } from 'src/stores/syncCenter'
-import { useRace } from 'src/composables/useRace'
-import { useRaceTerrain } from 'src/composables/useRaceTerrain'
-import { RaceTerrain } from 'src/classes/RaceFilter'
+import {Race} from 'src/types/DirectusTypes'
+import {formatDate} from 'src/utils/DateUtils'
+import {useSyncCenter} from 'src/stores/syncCenter'
+import {useRace} from 'src/composables/useRace'
+import {useRaceTerrain} from 'src/composables/useRaceTerrain'
+import {RaceTerrain} from 'src/classes/RaceFilter'
+import Mailchimp from 'components/newsletter/mailchimp.vue'
+import {useNewsletter} from 'src/composables/useNewsletter'
 
 const syncCenter = useSyncCenter()
 const raceCompose = useRace()
-const {getTerrainIcon} = useRaceTerrain()
+const { getTerrainIcon } = useRaceTerrain()
+const {isSubscribed} = useNewsletter()
 
-const props = withDefaults(defineProps<{
-  races: Race[]
-  hideLoadMore?: boolean
-  loading: boolean
-}>(), {
-  races: () => [],
-  hideLoadMore: false,
-})
+const props = withDefaults(
+  defineProps<{
+    races: Race[];
+    hideLoadMore?: boolean;
+    loading: boolean;
+  }>(),
+  {
+    races: () => [],
+    hideLoadMore: false,
+  }
+);
 
 const emit = defineEmits<{
-  (e: 'loadMore'): void
-}>()
+  (e: "loadMore"): void;
+}>();
 
 function loadMore() {
-  emit('loadMore')
+  emit("loadMore");
 }
 
 function shouldAddUser(race: Race): boolean {
-  return !syncCenter.userIdentifier && !!race.departureLink
+  return !syncCenter.userIdentifier && !!race.departureLink;
 }
 
 function getMonthlyDelimiter(date: string): string {
-  const momentDate = moment(date)
-  return momentDate.year() > moment().year() ? momentDate.locale('de-CH').format('MMMM YY') : momentDate.locale('de-CH').format('MMMM')
+  const momentDate = moment(date);
+  return momentDate.year() > moment().year()
+    ? momentDate.locale("de-CH").format("MMMM YY")
+    : momentDate.locale("de-CH").format("MMMM");
 }
 
-function monthChangeInArray(raceId: string, firstMonth: boolean = true): boolean {
-  const foundIndex = props.races.findIndex(tmpRace => tmpRace.id === raceId)
+function monthChangeInArray(
+  raceId: string,
+  firstMonth: boolean = true
+): boolean {
+  const foundIndex = props.races.findIndex((tmpRace) => tmpRace.id === raceId);
   // race doesn't exist
   if (foundIndex < 0 || !props.races) {
-    return false
+    return false;
   }
   // beginning is always a month change
   if (foundIndex === 0) {
-    return firstMonth
+    return firstMonth;
   }
 
-  const sortByDeadline = syncCenter.filter.deadline
+  const sortByDeadline = syncCenter.filter.deadline;
 
-  const previousRace = props.races[foundIndex - 1]
-  const currentRace = props.races[foundIndex]
+  const previousRace = props.races[foundIndex - 1];
+  const currentRace = props.races[foundIndex];
 
-  const previousRaceDate = sortByDeadline ? previousRace?.deadline : previousRace?.date
-  const currentRaceDate = sortByDeadline ? currentRace?.deadline : currentRace?.date
+  const previousRaceDate = sortByDeadline
+    ? previousRace?.deadline
+    : previousRace?.date;
+  const currentRaceDate = sortByDeadline
+    ? currentRace?.deadline
+    : currentRace?.date;
 
-  const monthOfPreviousRace = previousRaceDate ? new Date(previousRaceDate).getMonth() : undefined
-  const currentMonth = currentRaceDate ? new Date(currentRaceDate).getMonth() : undefined
-  return monthOfPreviousRace !== currentMonth
+  const monthOfPreviousRace = previousRaceDate
+    ? new Date(previousRaceDate).getMonth()
+    : undefined;
+  const currentMonth = currentRaceDate
+    ? new Date(currentRaceDate).getMonth()
+    : undefined;
+  return monthOfPreviousRace !== currentMonth;
 }
 </script>
 
@@ -93,33 +112,62 @@ function monthChangeInArray(raceId: string, firstMonth: boolean = true): boolean
             <div class="row">
               <!-- month name -->
               <div class="col-8">
-                {{ getMonthlyDelimiter(syncCenter.filter.deadline ? race.deadline! : race.date!) }}
+                {{
+                  getMonthlyDelimiter(
+                    syncCenter.filter.deadline ? race.deadline! : race.date!
+                  )
+                }}
               </div>
             </div>
           </q-timeline-entry>
 
+          <!-- newsletter -->
+          <q-timeline-entry v-if="raceIndex === 4 && !isSubscribed()" class="bg-dark text-white" color="white">
+            <mailchimp />
+          </q-timeline-entry>
+
           <!-- races -->
-          <q-timeline-entry :title="race.name!" @click="$router.push({ name: 'race', params: { id: race.id } })">
+          <q-timeline-entry
+            :title="race.name!"
+            @click="$router.push({ name: 'race', params: { id: race.id } })"
+          >
             <!-- date & deadline -->
             <template v-slot:subtitle>
               <div class="row items-center">
                 <div class="col-6">
-                  {{ formatDate(race.date!, 'dd, DD.MM yyyy') }}
+                  {{ formatDate(race.date!, "dd, DD.MM yyyy") }}
                 </div>
                 <!-- deadline -->
                 <div v-if="race.deadline" class="col-6 text-right">
-                  <q-btn v-if="shouldAddUser(race)" rounded unelevated size="sm" color="secondary" href="#/settings">
+                  <q-btn
+                    v-if="shouldAddUser(race)"
+                    color="secondary"
+                    href="#/settings"
+                    rounded
+                    size="sm"
+                    unelevated
+                  >
                     Deine Startzeit
                   </q-btn>
 
-                  <q-chip color="secondary" size="md" unelevated rounded
-                          v-else-if="syncCenter.myDepartures.getDepartureFor(race.id)">
+                  <q-chip
+                    v-else-if="syncCenter.myDepartures.getDepartureFor(race.id)"
+                    color="secondary"
+                    rounded
+                    size="md"
+                    unelevated
+                  >
                     {{ syncCenter.myDepartures.getFormatedDeparture(race.id) }}
                   </q-chip>
 
-                  <q-chip v-else color="secondary" dense :outline="!syncCenter.filter.deadline"
-                          :class="[{ 'text-strike': new Date() > new Date(race.deadline!) }]">
-                    {{ formatDate(race.deadline!, 'dd, DD.MMM') }}
+                  <q-chip
+                    v-else
+                    :class="[{ 'text-strike': new Date() > new Date(race.deadline!) }]"
+                    :outline="!syncCenter.filter.deadline"
+                    color="secondary"
+                    dense
+                  >
+                    {{ formatDate(race.deadline!, "dd, DD.MMM") }}
                   </q-chip>
                 </div>
               </div>
@@ -131,8 +179,17 @@ function monthChangeInArray(raceId: string, firstMonth: boolean = true): boolean
                   {{ race.name }}
                 </div>
                 <div class="col-2 text-right">
-                  <q-btn round color="primary" :outline="!syncCenter.myRaces.find(myRace => myRace.id === race.id)"
-                         dense @click.stop="raceCompose.addOrRemoveRace(race)">
+                  <q-btn
+                    :outline="
+                      !syncCenter.myRaces.find(
+                        (myRace) => myRace.id === race.id
+                      )
+                    "
+                    color="primary"
+                    dense
+                    round
+                    @click.stop="raceCompose.addOrRemoveRace(race)"
+                  >
                     <q-icon name="bookmark_outline" />
                   </q-btn>
                 </div>
@@ -142,12 +199,14 @@ function monthChangeInArray(raceId: string, firstMonth: boolean = true): boolean
             <div class="row justify-between items-center">
               <div class="col-auto">
                 <span v-if="!!race?.terrain" class="q-mr-xs">
-                  <q-icon :name="getTerrainIcon(race.terrain as RaceTerrain)" size="xs" style="margin-top: -4px;" />
+                  <q-icon
+                    :name="getTerrainIcon(race.terrain as RaceTerrain)"
+                    size="xs"
+                    style="margin-top: -4px"
+                  />
                 </span>
-                {{ race.city || race.mapName || 'vakant' }} {{ race.region ?
-                `(${race.region})`
-                :
-                '' }}
+                {{ race.city || race.mapName || "vakant" }}
+                {{ race.region ? `(${race.region})` : "" }}
               </div>
             </div>
           </q-timeline-entry>
@@ -157,9 +216,7 @@ function monthChangeInArray(raceId: string, firstMonth: boolean = true): boolean
 
     <!-- pagination -->
     <div v-if="!hideLoadMore" class="col-12 text-center q-pb-lg">
-      <q-btn outline @click="loadMore()">
-        Mehr Läufe laden
-      </q-btn>
+      <q-btn outline @click="loadMore()"> Mehr Läufe laden </q-btn>
     </div>
   </div>
 </template>
