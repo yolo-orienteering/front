@@ -122,7 +122,7 @@ function monthChangeInArray(
           </q-timeline-entry>
 
           <!-- newsletter -->
-          <q-timeline-entry v-if="raceIndex === 4 && !isSubscribed()" class="bg-dark text-white" color="white">
+          <q-timeline-entry v-if="raceIndex === 4 && !isSubscribed()" class="bg-dark text-white q-pr-sm" color="white">
             <mailchimp />
           </q-timeline-entry>
 
